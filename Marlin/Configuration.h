@@ -13,15 +13,14 @@
 * If you have a custom/unsupported mount uncomment #define CUSTOM_MOUNT and enter your offsets
 * below in the CUSTOM MOUNT section. Refer to the EZABL guide to get your offsets.
 *
-* STEP 1:
+* STEP 1 *** FOR 8 BIT BOARDS ONLY ***:
 * Select the correct board from the tools menu for the printer you are flashing.
 * Read the printer title for the model you are flashing, it will show what board to select.
 *
 * STEP 2:
 * Uncomment the printer you want to flash. The printers are sorted A-Z by brand name.
-* If you are using the Creality Dual board with the Ender 3/Ender 5/CR-20 then read the specific section below in that printer section on how to do this.
 *
-* STEP 3:
+* STEP 3 *** FOR 8 BIT BOARDS ONLY ***:
 * Select the COM port your printer is on from the Tools menu. If you do not see the COM port try
 * downloading the latest drivers from the manufacturer or TH3D site on our knowledgebase.
 *
@@ -30,7 +29,12 @@
 * the lines you need to use them are also uncommented.
 *
 * STEP 5:
+* 8-Bit Boards:
 * Once you have your settings verified click the arrow in the upper left to upload to the board.
+* 
+* 32-Bit Printers:
+* Select Auto Build > PIO Build to build the firmware. Copy the Firmware.bin file from the ".pioenvs/CPU FOLDER" to your SD card.
+* Put the SD card into the printer with the power OFF. Turn on the printer, it will take a little longer to boot as it is flashing the firmware.
 *
 * STEP 6:
 * Reset your eeprom. You can send M502 then M500 to reset the EEPROM OR on the printer LCD go to
