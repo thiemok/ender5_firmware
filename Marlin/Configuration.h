@@ -278,8 +278,8 @@
 //
 //#define BLTOUCH
 //#define BLTOUCH_V3
-// Here is where you set your servo pin. EZOut Servo Pin Numbers: Ender3/5/CR-10 - 27, Ender 2 - 29. For 2560 boards look for the pin you connected the servo wire to and enter below.
-//#define SERVO0_PIN 27
+// Here is where you set your servo pin. EZOut Servo Pin Numbers: Ender3/5/CR-10 - 27, Ender 2 - 29. For 2560 boards look for the pin you connected the servo wire to and enter below. For EZBoard use P2_04
+//#define SERVO0_PIN P2_04
 //
 // NOTE: On 1284p boards due to space limitations and the large amount of code the BLTouch requires for the LCD Menus
 // the Bootscreen and some Control > Motion menus will not be displayed due to space restrictions

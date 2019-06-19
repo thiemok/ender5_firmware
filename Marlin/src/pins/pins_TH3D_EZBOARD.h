@@ -34,7 +34,7 @@
 //
 // Servos
 //
-#define SERVO0_PIN        P2_04
+#define SERVO0_PIN      P2_04
 
 #define FIL_RUNOUT_PIN  P1_27
 
