@@ -31,7 +31,7 @@
 * STEP 5:
 * 8-Bit Boards:
 * Once you have your settings verified click the arrow in the upper left to upload to the board.
-* 
+*
 * 32-Bit Printers:
 * Select Auto Build > PIO Build to build the firmware. Copy the Firmware.bin file from the ".pioenvs/CPU FOLDER" to your SD card.
 * Put the SD card into the printer with the power OFF. Turn on the printer, it will take a little longer to boot as it is flashing the firmware.
@@ -92,6 +92,12 @@
 //#define TM3DAERO_EXTENDED
 //#define PETSFANG //This is the RIGHT mounted version - if using the left mount please use the CUSTOM_PROBE option.
 //#define CUSTOM_PROBE
+
+// PT100 Thermocouple Support
+// The PT100 Thermocouple connects to the "SERVO" header with 5V, GND, SIG connected from the SERVO header to the
+// same labeled connections on the PT100 Amplifier board. You cannot use the PT100 with a BL Touch since it uses the
+// same pins.
+//#define EZBOARD_PT100
 
 //===========================================================================
 // *************************  END PRINTER SECTION   *************************
