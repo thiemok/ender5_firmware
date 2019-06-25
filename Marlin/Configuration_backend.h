@@ -181,7 +181,7 @@
 #endif
 
 #define SHOW_CUSTOM_BOOTSCREEN
-#define CUSTOM_STATUS_SCREEN_IMAGE
+//#define CUSTOM_STATUS_SCREEN_IMAGE
 
 //Fixes issues with XY not homing due to noisy endstop cables
 #define ENDSTOP_NOISE_THRESHOLD 2
