@@ -71,7 +71,7 @@
 //===========================================================================
 
 //===========================================================================
-// Creality CR-10/CR-10S/Ender3/Ender5 Options
+// Creality CR-10/CR-10S/Ender3/Ender5 Options - CR-10S use the CR-10 option
 //===========================================================================
 //#define CR10
 //#define CR10_MINI
@@ -97,10 +97,27 @@
 //#define CUSTOM_PROBE
 
 // PT100 Thermocouple Support
-// The PT100 Thermocouple connects to the "SERVO" header with 5V, GND, SIG connected from the SERVO header to the
-// same labeled connections on the PT100 Amplifier board. You cannot use the PT100 with a BL Touch since it uses the
-// same pins.
+// Refer to the EZBoard installation documentation for connecting the PT100 to the EZBoard Expansion Header
 //#define EZBOARD_PT100
+
+// Axis Direction Settings
+// If you need to reverse the direction of a motor uncomment the below option for that axis.
+// If you need to use this setting please report the printer model you have and what axis was inversed to
+// TH3D support by emailing Support@TH3DStudio.com so we can make updates for that machine.
+//#define REVERSE_X_MOTOR
+//#define REVERSE_Y_MOTOR
+//#define REVERSE_Z_MOTOR
+//#define REVERSE_E_MOTOR
+
+// Dual Z Motor Settings
+// When running dual Z motors uncomment the below line. This will increase the Z motor driver current for 2x motors.
+//#define DUAL_Z_MOTORS
+
+// E Motor Torque Settings
+// By default we have StealthChop2 Disabled for the E axis. This is due to the possibility of losing steps
+// due to the low torque nature of StealthChop2. If you want to quiet down the E motor you can uncomment the
+// below line. However, if you get lost steps and inconsistent extrusion then disable this option.
+//#define STEALTHCHOP_E
 
 //===========================================================================
 // *************************  END PRINTER SECTION   *************************
@@ -331,4 +348,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.2"
+#define UNIFIED_VERSION "TH3D U2.R1.3"

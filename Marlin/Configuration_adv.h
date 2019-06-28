@@ -440,7 +440,11 @@
   #endif
 
   #if AXIS_IS_TMC(Z)
-    #define Z_CURRENT     600
+    #if ENABLED(DUAL_Z_MOTORS)
+      #define Z_CURRENT     1000
+    #else
+      #define Z_CURRENT     700
+    #endif
     #define Z_MICROSTEPS   16
     #define Z_RSENSE     0.11
   #endif
@@ -495,7 +499,6 @@
   
   #define STEALTHCHOP_XY
   #define STEALTHCHOP_Z
-  //#define STEALTHCHOP_E
 
   /**
    * Optimize spreadCycle chopper parameters by using predefined parameter sets

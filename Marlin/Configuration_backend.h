@@ -88,19 +88,40 @@
   #define DEFAULT_ZJERK                  0.3
   #define DEFAULT_EJERK                  5.0
 
-  #define INVERT_X_DIR true
-  #define INVERT_Y_DIR true
+  #if ENABLED(REVERSE_X_MOTOR)
+    #define INVERT_X_DIR false
+  #else
+    #define INVERT_X_DIR true
+  #endif
+  
+  #if ENABLED(REVERSE_Y_MOTOR)
+    #define INVERT_Y_DIR false
+  #else
+    #define INVERT_Y_DIR true
+  #endif
 
   #if ENABLED(ENDER5)
-    #define INVERT_Z_DIR true
+    #if ENABLED(REVERSE_Z_MOTOR)
+      #define INVERT_Z_DIR false
+    #else
+      #define INVERT_Z_DIR true
+    #endif
   #else
-    #define INVERT_Z_DIR false
+    #if ENABLED(REVERSE_Z_MOTOR)
+      #define INVERT_Z_DIR true
+    #else
+      #define INVERT_Z_DIR false
+    #endif
   #endif
 
   #if ENABLED(TITAN_EXTRUDER)
     #define INVERT_E0_DIR false
   #else
-    #define INVERT_E0_DIR true
+    #if ENABLED(REVERSE_E_MOTOR)
+      #define INVERT_E0_DIR false
+    #else
+      #define INVERT_E0_DIR true
+    #endif
   #endif
 
   #ifndef MOTHERBOARD
