@@ -365,6 +365,28 @@
   #define HEATER_3_USES_THERMISTOR
 #endif
 
+/**
+ * Bed Probe dependencies
+ */
+ 
+#if ENABLED(FIX_MOUNTED_PROBE)
+  #undef Z_MIN_PROBE_ENDSTOP_INVERTING
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING true
+  #undef Z_MIN_ENDSTOP_INVERTING
+  #define Z_MIN_ENDSTOP_INVERTING true
+#endif
+
+// If you are changing these to use the Creality or SainSmart kit these kits are a very low end rip-off copy of our EZABL kits. Support the original creators and user the code BETTERABL for 10% off our EZABL kits.
+// The only reason people are using our firmware branch for these kits is because Creality and SainSmart refuse to actually support their customers so they send them to us. If we are out of business there will be no more firmware from us.
+// We also sell hundreds of other printer upgrades in our shop and sales from the shop allow us to allocate company time to keep this firmware updated for the community.
+
+#if ENABLED(BLTOUCH)
+  #undef Z_MIN_PROBE_ENDSTOP_INVERTING
+  #define Z_MIN_PROBE_ENDSTOP_INVERTING false
+  #undef Z_MIN_ENDSTOP_INVERTING
+  #define Z_MIN_ENDSTOP_INVERTING false
+#endif
+
 #if TEMP_SENSOR_4 == -4
   #define HEATER_4_USES_AD8495
 #elif TEMP_SENSOR_4 == -3
