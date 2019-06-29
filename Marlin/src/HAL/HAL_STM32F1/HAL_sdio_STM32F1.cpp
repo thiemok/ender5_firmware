@@ -1,10 +1,10 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
- * Copyright (C) 2017 Victor Perez
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2017 Victor Perez
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,11 @@
  *
  */
 
-#if defined(ARDUINO_ARCH_STM32F1) && (defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY))
+#ifdef ARDUINO_ARCH_STM32F1
+
+#include <libmaple/stm32.h>
+
+#if defined(STM32_HIGH_DENSITY) || defined(STM32_XL_DENSITY)
 
 #include "HAL_sdio_STM32F1.h"
 
@@ -36,7 +40,7 @@ bool SDIO_Init(void) {
 
   dma_init(SDIO_DMA_DEV);
   dma_disable(SDIO_DMA_DEV, SDIO_DMA_CHANNEL);
-  dma_set_priority(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, DMA_PRIORITY_VERY_HIGH);
+  dma_set_priority(SDIO_DMA_DEV, SDIO_DMA_CHANNEL, DMA_PRIORITY_MEDIUM);
 
   if (!SDIO_CmdGoIdleState()) return false;
   if (!SDIO_CmdGoIdleState()) return false; /* Hotplugged cards tends to miss first CMD0, so give them a second chance. */
@@ -276,4 +280,5 @@ bool SDIO_GetCmdResp7(void) {
   return true;
 }
 
-#endif // ARDUINO_ARCH_STM32F1 && (STM32_HIGH_DENSITY || STM32_XL_DENSITY)
+#endif // STM32_HIGH_DENSITY || STM32_XL_DENSITY
+#endif // ARDUINO_ARCH_STM32F1

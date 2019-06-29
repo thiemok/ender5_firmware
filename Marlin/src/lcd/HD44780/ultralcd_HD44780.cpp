@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 
 #include "ultralcd_HD44780.h"
 #include "../ultralcd.h"
+#include "../../libs/numtostr.h"
 
 #include "../../sd/cardreader.h"
 #include "../../module/temperature.h"
@@ -517,7 +518,7 @@ FORCE_INLINE void _draw_axis_value(const AxisEnum axis, const char *value, const
     else {
       #if DISABLED(HOME_AFTER_DEACTIVATE, DISABLE_REDUCED_ACCURACY_WARNING)
         if (!TEST(axis_known_position, axis))
-          lcd_put_u8str_P(axis == Z_AXIS ? PSTR("      ") : PSTR("    "));
+          lcd_put_u8str_P(axis == Z_AXIS ? PSTR("       ") : PSTR("    "));
         else
       #endif
           lcd_put_u8str(value);
@@ -885,7 +886,7 @@ void MarlinUI::draw_status_screen() {
               uint16_t spd = thermalManager.fan_speed[0];
               if (blink) c = 'F';
               #if ENABLED(ADAPTIVE_FAN_SLOWING)
-                else { c = '*'; spd = (spd * thermalManager.fan_speed_scaler[0]) >> 7; }
+                else { c = '*'; spd = thermalManager.scaledFanSpeed(0, spd); }
               #endif
               per = thermalManager.fanPercent(spd);
             }
@@ -992,7 +993,7 @@ void MarlinUI::draw_status_screen() {
 
   #endif // ADVANCED_PAUSE_FEATURE
 
-  void draw_menu_item_static(const uint8_t row, PGM_P pstr, const bool center/*=true*/, const bool invert/*=false*/, const char *valstr/*=NULL*/) {
+  void draw_menu_item_static(const uint8_t row, PGM_P pstr, const bool center/*=true*/, const bool invert/*=false*/, const char *valstr/*=nullptr*/) {
     UNUSED(invert);
     int8_t n = LCD_WIDTH;
     lcd_moveto(0, row);
@@ -1024,10 +1025,10 @@ void MarlinUI::draw_status_screen() {
     if (pgm) lcd_put_u8str_P(data); else lcd_put_u8str(data);
   }
 
-  void draw_edit_screen(PGM_P const pstr, const char* const value/*=NULL*/) {
-    lcd_moveto(1, 1);
+  void draw_edit_screen(PGM_P const pstr, const char* const value/*=nullptr*/) {
+    lcd_moveto(0, 1);
     lcd_put_u8str_P(pstr);
-    if (value != NULL) {
+    if (value != nullptr) {
       lcd_put_wchar(':');
       int len = utf8_strlen(value);
       const uint8_t valrow = (utf8_strlen_P(pstr) + 1 + len + 1) > (LCD_WIDTH - 2) ? 2 : 1;   // Value on the next row if it won't fit
@@ -1035,6 +1036,14 @@ void MarlinUI::draw_status_screen() {
       lcd_put_wchar(' ');                                                                     // Overwrite char if value gets shorter
       lcd_put_u8str(value);
     }
+  }
+
+  void draw_select_screen(PGM_P const yes, PGM_P const no, const bool yesno, PGM_P const pref, const char * const string, PGM_P const suff) {
+    ui.draw_select_screen_prompt(pref, string, suff);
+    SETCURSOR(0, LCD_HEIGHT - 1);
+    lcd_put_wchar(yesno ? ' ' : '['); lcd_put_u8str_P(no); lcd_put_wchar(yesno ? ' ' : ']');
+    SETCURSOR_RJ(utf8_strlen_P(yes) + 2, LCD_HEIGHT - 1);
+    lcd_put_wchar(yesno ? '[' : ' '); lcd_put_u8str_P(yes); lcd_put_wchar(yesno ? ']' : ' ');
   }
 
   #if ENABLED(SDSUPPORT)

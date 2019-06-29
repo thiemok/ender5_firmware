@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -176,7 +176,7 @@
   // M3/M4/M5 - Spindle/Laser Control
   //
   #define SPINDLE_LASER_PWM_PIN    24   // B4  PWM2A
-  #define SPINDLE_LASER_ENABLE_PIN 39   // F1  Pin should have a pullup!
+  #define SPINDLE_LASER_ENA_PIN    39   // F1  Pin should have a pullup!
   #define SPINDLE_DIR_PIN          40   // F2
 
   #define CASE_LIGHT_PIN            0   // D0  PWM0B

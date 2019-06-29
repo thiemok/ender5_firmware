@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -286,6 +286,11 @@
 /**
  * Temp Sensor defines
  */
+
+#define ANY_TEMP_SENSOR_IS(n) (TEMP_SENSOR_0 == (n) || TEMP_SENSOR_1 == (n) || TEMP_SENSOR_2 == (n) || TEMP_SENSOR_3 == (n) || TEMP_SENSOR_4 == (n) || TEMP_SENSOR_5 == (n) || TEMP_SENSOR_BED == (n) || TEMP_SENSOR_CHAMBER == (n))
+
+#define HAS_USER_THERMISTORS ANY_TEMP_SENSOR_IS(1000)
+
 #if TEMP_SENSOR_0 == -4
   #define HEATER_0_USES_AD8495
 #elif TEMP_SENSOR_0 == -3
@@ -299,12 +304,15 @@
   #define HEATER_0_MAX6675_TMAX 1024
 #elif TEMP_SENSOR_0 == -1
   #define HEATER_0_USES_AD595
-#elif TEMP_SENSOR_0 == 0
+#elif TEMP_SENSOR_0 > 0
+  #define THERMISTOR_HEATER_0 TEMP_SENSOR_0
+  #define HEATER_0_USES_THERMISTOR
+  #if TEMP_SENSOR_0 == 1000
+    #define HEATER_0_USER_THERMISTOR
+  #endif
+#else
   #undef HEATER_0_MINTEMP
   #undef HEATER_0_MAXTEMP
-#elif TEMP_SENSOR_0 > 0
-  #define THERMISTORHEATER_0 TEMP_SENSOR_0
-  #define HEATER_0_USES_THERMISTOR
 #endif
 
 #if TEMP_SENSOR_1 == -4
@@ -325,12 +333,15 @@
   #define HEATER_1_MAX6675_TMAX 1024
 #elif TEMP_SENSOR_1 == -1
   #define HEATER_1_USES_AD595
-#elif TEMP_SENSOR_1 == 0
+#elif TEMP_SENSOR_1 > 0
+  #define THERMISTOR_HEATER_1 TEMP_SENSOR_1
+  #define HEATER_1_USES_THERMISTOR
+  #if TEMP_SENSOR_1 == 1000
+    #define HEATER_1_USER_THERMISTOR
+  #endif
+#else
   #undef HEATER_1_MINTEMP
   #undef HEATER_1_MAXTEMP
-#elif TEMP_SENSOR_1 > 0
-  #define THERMISTORHEATER_1 TEMP_SENSOR_1
-  #define HEATER_1_USES_THERMISTOR
 #endif
 
 #if TEMP_SENSOR_2 == -4
@@ -341,12 +352,15 @@
   #error "MAX6675 Thermocouples (-2) not supported for TEMP_SENSOR_2."
 #elif TEMP_SENSOR_2 == -1
   #define HEATER_2_USES_AD595
-#elif TEMP_SENSOR_2 == 0
+#elif TEMP_SENSOR_2 > 0
+  #define THERMISTOR_HEATER_2 TEMP_SENSOR_2
+  #define HEATER_2_USES_THERMISTOR
+  #if TEMP_SENSOR_2 == 1000
+    #define HEATER_2_USER_THERMISTOR
+  #endif
+#else
   #undef HEATER_2_MINTEMP
   #undef HEATER_2_MAXTEMP
-#elif TEMP_SENSOR_2 > 0
-  #define THERMISTORHEATER_2 TEMP_SENSOR_2
-  #define HEATER_2_USES_THERMISTOR
 #endif
 
 #if TEMP_SENSOR_3 == -4
@@ -357,34 +371,15 @@
   #error "MAX6675 Thermocouples (-2) not supported for TEMP_SENSOR_3."
 #elif TEMP_SENSOR_3 == -1
   #define HEATER_3_USES_AD595
-#elif TEMP_SENSOR_3 == 0
+#elif TEMP_SENSOR_3 > 0
+  #define THERMISTOR_HEATER_3 TEMP_SENSOR_3
+  #define HEATER_3_USES_THERMISTOR
+  #if TEMP_SENSOR_3 == 1000
+    #define HEATER_3_USER_THERMISTOR
+  #endif
+#else
   #undef HEATER_3_MINTEMP
   #undef HEATER_3_MAXTEMP
-#elif TEMP_SENSOR_3 > 0
-  #define THERMISTORHEATER_3 TEMP_SENSOR_3
-  #define HEATER_3_USES_THERMISTOR
-#endif
-
-/**
- * Bed Probe dependencies
- */
- 
-#if ENABLED(FIX_MOUNTED_PROBE)
-  #undef Z_MIN_PROBE_ENDSTOP_INVERTING
-  #define Z_MIN_PROBE_ENDSTOP_INVERTING true
-  #undef Z_MIN_ENDSTOP_INVERTING
-  #define Z_MIN_ENDSTOP_INVERTING true
-#endif
-
-// If you are changing these to use the Creality or SainSmart kit these kits are a very low end rip-off copy of our EZABL kits. Support the original creators and user the code BETTERABL for 10% off our EZABL kits.
-// The only reason people are using our firmware branch for these kits is because Creality and SainSmart refuse to actually support their customers so they send them to us. If we are out of business there will be no more firmware from us.
-// We also sell hundreds of other printer upgrades in our shop and sales from the shop allow us to allocate company time to keep this firmware updated for the community.
-
-#if ENABLED(BLTOUCH)
-  #undef Z_MIN_PROBE_ENDSTOP_INVERTING
-  #define Z_MIN_PROBE_ENDSTOP_INVERTING false
-  #undef Z_MIN_ENDSTOP_INVERTING
-  #define Z_MIN_ENDSTOP_INVERTING false
 #endif
 
 #if TEMP_SENSOR_4 == -4
@@ -395,12 +390,15 @@
   #error "MAX6675 Thermocouples (-2) not supported for TEMP_SENSOR_4."
 #elif TEMP_SENSOR_4 == -1
   #define HEATER_4_USES_AD595
-#elif TEMP_SENSOR_4 == 0
+#elif TEMP_SENSOR_4 > 0
+  #define THERMISTOR_HEATER_4 TEMP_SENSOR_4
+  #define HEATER_4_USES_THERMISTOR
+  #if TEMP_SENSOR_4 == 1000
+    #define HEATER_4_USER_THERMISTOR
+  #endif
+#else
   #undef HEATER_4_MINTEMP
   #undef HEATER_4_MAXTEMP
-#elif TEMP_SENSOR_4 > 0
-  #define THERMISTORHEATER_4 TEMP_SENSOR_4
-  #define HEATER_4_USES_THERMISTOR
 #endif
 
 #if TEMP_SENSOR_5 == -4
@@ -411,12 +409,15 @@
   #error "MAX6675 Thermocouples (-2) not supported for TEMP_SENSOR_5."
 #elif TEMP_SENSOR_5 == -1
   #define HEATER_5_USES_AD595
-#elif TEMP_SENSOR_5 == 0
+#elif TEMP_SENSOR_5 > 0
+  #define THERMISTOR_HEATER_5 TEMP_SENSOR_5
+  #define HEATER_5_USES_THERMISTOR
+  #if TEMP_SENSOR_5 == 1000
+    #define HEATER_5_USER_THERMISTOR
+  #endif
+#else
   #undef HEATER_5_MINTEMP
   #undef HEATER_5_MAXTEMP
-#elif TEMP_SENSOR_5 > 0
-  #define THERMISTORHEATER_5 TEMP_SENSOR_5
-  #define HEATER_5_USES_THERMISTOR
 #endif
 
 #if TEMP_SENSOR_BED == -4
@@ -427,12 +428,15 @@
   #error "MAX6675 Thermocouples (-2) not supported for TEMP_SENSOR_BED."
 #elif TEMP_SENSOR_BED == -1
   #define HEATER_BED_USES_AD595
-#elif TEMP_SENSOR_BED == 0
-  #undef BED_MINTEMP
-  #undef BED_MAXTEMP
 #elif TEMP_SENSOR_BED > 0
   #define THERMISTORBED TEMP_SENSOR_BED
   #define HEATER_BED_USES_THERMISTOR
+  #if TEMP_SENSOR_BED == 1000
+    #define HEATER_BED_USER_THERMISTOR
+  #endif
+#else
+  #undef BED_MINTEMP
+  #undef BED_MAXTEMP
 #endif
 
 #if TEMP_SENSOR_CHAMBER == -4
@@ -446,6 +450,12 @@
 #elif TEMP_SENSOR_CHAMBER > 0
   #define THERMISTORCHAMBER TEMP_SENSOR_CHAMBER
   #define HEATER_CHAMBER_USES_THERMISTOR
+  #if TEMP_SENSOR_CHAMBER == 1000
+    #define HEATER_CHAMBER_USER_THERMISTOR
+  #endif
+#else
+  #undef CHAMBER_MINTEMP
+  #undef CHAMBER_MAXTEMP
 #endif
 
 #define HOTEND_USES_THERMISTOR ANY(HEATER_0_USES_THERMISTOR, HEATER_1_USES_THERMISTOR, HEATER_2_USES_THERMISTOR, HEATER_3_USES_THERMISTOR, HEATER_4_USES_THERMISTOR)
@@ -483,7 +493,7 @@
  *       Preserve this ordering when adding new drivers.
  */
 
-#define TRINAMICS (HAS_TRINAMIC || HAS_DRIVER(TMC2130_STANDALONE) || HAS_DRIVER(TMC2208_STANDALONE) || HAS_DRIVER(TMC26X_STANDALONE) || HAS_DRIVER(TMC2660_STANDALONE) || HAS_DRIVER(TMC5130_STANDALONE) || HAS_DRIVER(TMC5160_STANDALONE) || HAS_DRIVER(TMC2160_STANDALONE))
+#define TRINAMICS (HAS_TRINAMIC || HAS_DRIVER(TMC2130_STANDALONE) || HAS_DRIVER(TMC2208_STANDALONE) || HAS_DRIVER(TMC2209_STANDALONE) || HAS_DRIVER(TMC26X_STANDALONE) || HAS_DRIVER(TMC2660_STANDALONE) || HAS_DRIVER(TMC5130_STANDALONE) || HAS_DRIVER(TMC5160_STANDALONE) || HAS_DRIVER(TMC2160_STANDALONE))
 
 #ifndef MINIMUM_STEPPER_DIR_DELAY
   #if HAS_DRIVER(TB6560)
@@ -512,8 +522,10 @@
     #define MINIMUM_STEPPER_PULSE 3
   #elif HAS_DRIVER(DRV8825)
     #define MINIMUM_STEPPER_PULSE 2
-  #elif HAS_DRIVER(A4988) || HAS_DRIVER(LV8729) || HAS_DRIVER(A5984)
+  #elif HAS_DRIVER(A4988) || HAS_DRIVER(A5984)
     #define MINIMUM_STEPPER_PULSE 1
+  #elif HAS_DRIVER(LV8729)
+    #define MINIMUM_STEPPER_PULSE 0
   #elif TRINAMICS
     #define MINIMUM_STEPPER_PULSE 0
   #else
@@ -524,10 +536,10 @@
 #ifndef MAXIMUM_STEPPER_RATE
   #if HAS_DRIVER(TB6560)
     #define MAXIMUM_STEPPER_RATE 15000
-  #elif HAS_DRIVER(LV8729)
-    #define MAXIMUM_STEPPER_RATE 130000
   #elif HAS_DRIVER(TB6600)
     #define MAXIMUM_STEPPER_RATE 150000
+  #elif HAS_DRIVER(LV8729)
+    #define MAXIMUM_STEPPER_RATE 200000
   #elif HAS_DRIVER(DRV8825)
     #define MAXIMUM_STEPPER_RATE 250000
   #elif TRINAMICS
@@ -893,11 +905,8 @@
 #if HAS_TRINAMIC
   #define HAS_TMCX1X0       (HAS_DRIVER(TMC2130) || HAS_DRIVER(TMC2160) || HAS_DRIVER(TMC5130) || HAS_DRIVER(TMC5160))
   #define TMC_HAS_SPI       (HAS_TMCX1X0 || HAS_DRIVER(TMC2660))
-  #define HAS_STALLGUARD    (HAS_TMCX1X0 || HAS_DRIVER(TMC2660))
-  #define HAS_STEALTHCHOP   (HAS_TMCX1X0 || HAS_DRIVER(TMC2208))
-  #define AXIS_HAS_SPI(ST)         (AXIS_DRIVER_TYPE(ST, TMC2130) || AXIS_DRIVER_TYPE(ST, TMC2160) || AXIS_DRIVER_TYPE(ST, TMC2660))
-  #define AXIS_HAS_STALLGUARD(ST)  (AXIS_DRIVER_TYPE(ST, TMC2130) || AXIS_DRIVER_TYPE(ST, TMC2160) || AXIS_DRIVER_TYPE(ST, TMC2660) || AXIS_DRIVER_TYPE(ST, TMC5130) || AXIS_DRIVER_TYPE(ST, TMC5160))
-  #define AXIS_HAS_STEALTHCHOP(ST) (AXIS_DRIVER_TYPE(ST, TMC2130) || AXIS_DRIVER_TYPE(ST, TMC2160) || AXIS_DRIVER_TYPE(ST, TMC2208) || AXIS_DRIVER_TYPE(ST, TMC5130) || AXIS_DRIVER_TYPE(ST, TMC5160))
+  #define HAS_STALLGUARD    (HAS_TMCX1X0 || HAS_DRIVER(TMC2209) || HAS_DRIVER(TMC2660))
+  #define HAS_STEALTHCHOP   (HAS_TMCX1X0 || HAS_DRIVER(TMC2208) || HAS_DRIVER(TMC2209))
 
   #define STEALTHCHOP_ENABLED ANY(STEALTHCHOP_XY, STEALTHCHOP_Z, STEALTHCHOP_E)
   #define USE_SENSORLESS EITHER(SENSORLESS_HOMING, SENSORLESS_PROBING)
@@ -943,7 +952,7 @@
 #define HAS_TEMP_HOTEND (HAS_TEMP_ADC_0 || ENABLED(HEATER_0_USES_MAX6675))
 #define HAS_TEMP_BED HAS_TEMP_ADC_BED
 #define HAS_TEMP_CHAMBER HAS_TEMP_ADC_CHAMBER
-#define HAS_HEATED_CHAMBER (HAS_TEMP_CHAMBER && PIN_EXISTS(CHAMBER_HEATER))
+#define HAS_HEATED_CHAMBER (HAS_TEMP_CHAMBER && PIN_EXISTS(HEATER_CHAMBER))
 
 // Heaters
 #define HAS_HEATER_0 (PIN_EXISTS(HEATER_0))
@@ -978,7 +987,7 @@
 #define HAS_AUTO_FAN_3 (HOTENDS > 3 && PIN_EXISTS(E3_AUTO_FAN))
 #define HAS_AUTO_FAN_4 (HOTENDS > 4 && PIN_EXISTS(E4_AUTO_FAN))
 #define HAS_AUTO_FAN_5 (HOTENDS > 5 && PIN_EXISTS(E5_AUTO_FAN))
-#define HAS_AUTO_CHAMBER_FAN (PIN_EXISTS(CHAMBER_AUTO_FAN))
+#define HAS_AUTO_CHAMBER_FAN (HAS_TEMP_CHAMBER && PIN_EXISTS(CHAMBER_AUTO_FAN))
 #define HAS_AUTO_FAN (HAS_AUTO_FAN_0 || HAS_AUTO_FAN_1 || HAS_AUTO_FAN_2 || HAS_AUTO_FAN_3 || HAS_AUTO_FAN_4 || HAS_AUTO_FAN_5 || HAS_AUTO_CHAMBER_FAN)
 
 // Other fans
@@ -1184,17 +1193,9 @@
   #define FAN_COUNT 0
 #endif
 
-#if HAS_FAN0
-  #define WRITE_FAN(v) WRITE(FAN_PIN, (v) ^ FAN_INVERTING)
-  #define WRITE_FAN0(v) WRITE_FAN(v)
+#if FAN_COUNT > 0
+  #define WRITE_FAN(n, v) WRITE(FAN##n##_PIN, (v) ^ FAN_INVERTING)
 #endif
-#if HAS_FAN1
-  #define WRITE_FAN1(v) WRITE(FAN1_PIN, (v) ^ FAN_INVERTING)
-#endif
-#if HAS_FAN2
-  #define WRITE_FAN2(v) WRITE(FAN2_PIN, (v) ^ FAN_INVERTING)
-#endif
-#define WRITE_FAN_N(n, v) WRITE_FAN##n(v)
 
 /**
  * Part Cooling fan multipliexer
@@ -1579,6 +1580,9 @@
   #ifndef Z_CLEARANCE_MULTI_PROBE
     #define Z_CLEARANCE_MULTI_PROBE Z_CLEARANCE_BETWEEN_PROBES
   #endif
+  #if ENABLED(BLTOUCH) && !defined(BLTOUCH_DELAY)
+    #define BLTOUCH_DELAY 500
+  #endif
 #endif
 
 #ifndef __SAM3X8E__ //todo: hal: broken hal encapsulation
@@ -1680,15 +1684,13 @@
   #endif
 #endif
 
-// needs to be here so that we catch the above changes to our defines
+// Defined here to catch the above defines
 #if ENABLED(SDCARD_SORT_ALPHA)
   #define HAS_FOLDER_SORTING (FOLDER_SORTING || ENABLED(SDSORT_GCODE))
 #endif
 
 // If platform requires early initialization of watchdog to properly boot
 #define EARLY_WATCHDOG (ENABLED(USE_WATCHDOG) && defined(ARDUINO_ARCH_SAM))
-
-#define USE_EXECUTE_COMMANDS_IMMEDIATE (ANY(G29_RETRY_AND_RECOVER, GCODE_MACROS, POWER_LOSS_RECOVERY) || HAS_DRIVER(L6470))
 
 #if ENABLED(Z_TRIPLE_STEPPER_DRIVERS)
   #define Z_STEPPER_COUNT 3
@@ -1701,7 +1703,7 @@
 // Get LCD character width/height, which may be overridden by pins, configs, etc.
 #ifndef LCD_WIDTH
   #if HAS_GRAPHICAL_LCD
-    #define LCD_WIDTH 22
+    #define LCD_WIDTH 21
   #elif ENABLED(ULTIPANEL)
     #define LCD_WIDTH 20
   #elif HAS_SPI_LCD
@@ -1715,5 +1717,20 @@
     #define LCD_HEIGHT 4
   #elif HAS_SPI_LCD
     #define LCD_HEIGHT 2
+  #endif
+#endif
+
+//
+// The external SD card is not used. Hardware SPI is used to access the card.
+// When sharing the SD card with a PC we want the menu options to
+// mount/unmount the card and refresh it. So we disable card detect.
+//
+#if ENABLED(SDSUPPORT)
+  #if SD_CONNECTION_IS(ONBOARD) && DISABLED(NO_SD_HOST_DRIVE)
+    #undef SD_DETECT_PIN
+    #define SHARED_SD_CARD
+  #endif
+  #if DISABLED(SHARED_SD_CARD)
+    #define INIT_SDCARD_ON_BOOT
   #endif
 #endif

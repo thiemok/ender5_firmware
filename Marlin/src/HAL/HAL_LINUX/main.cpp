@@ -1,7 +1,7 @@
 /**
  * Marlin 3D Printer Firmware
  *
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -110,7 +110,7 @@ int main(void) {
 
   #if NUM_SERIAL > 0
     MYSERIAL0.begin(BAUDRATE);
-    SERIAL_PRINTF("x86_64 Initialised\n");
+    SERIAL_ECHOLNPGM("x86_64 Initialized");
     SERIAL_FLUSHTX();
   #endif
 

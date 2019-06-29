@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,20 +66,20 @@
 
 #include "../../Marlin.h"
 
-#define SPI_FULL_SPEED 0
-#define SPI_HALF_SPEED 1
-#define SPI_QUARTER_SPEED 2
-#define SPI_EIGHTH_SPEED 3
+#define SPI_FULL_SPEED      0
+#define SPI_HALF_SPEED      1
+#define SPI_QUARTER_SPEED   2
+#define SPI_EIGHTH_SPEED    3
 #define SPI_SIXTEENTH_SPEED 4
-#define SPI_SPEED_5 5
-#define SPI_SPEED_6 6
+#define SPI_SPEED_5         5
+#define SPI_SPEED_6         6
 
 void spiBegin();
 void spiInit(uint8_t spiRate);
 void spiSend(uint8_t b);
 void spiSend(const uint8_t* buf, size_t n);
 
-#include <Arduino.h>
+#include "../shared/Marduino.h"
 #include "fastio_Due.h"
 
 void u8g_SetPIOutput_DUE_hw_spi(u8g_t *u8g, uint8_t pin_index) {

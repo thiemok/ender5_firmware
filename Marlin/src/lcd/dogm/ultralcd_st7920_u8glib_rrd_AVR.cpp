@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -133,5 +133,14 @@ u8g_pb_t  u8g_dev_st7920_128x64_rrd_pb = {{PAGE_HEIGHT, LCD_PIXEL_HEIGHT, 0, 0, 
 u8g_dev_t u8g_dev_st7920_128x64_rrd_sw_spi = {u8g_dev_rrd_st7920_128x64_fn, &u8g_dev_st7920_128x64_rrd_pb, &u8g_com_null_fn};
 
 #pragma GCC reset_options
+
+#if ENABLED(LIGHTWEIGHT_UI)
+  #include "../../HAL/shared/HAL_ST7920.h"
+  void ST7920_cs()                          { ST7920_CS(); }
+  void ST7920_ncs()                         { ST7920_NCS(); }
+  void ST7920_set_cmd()                     { ST7920_SET_CMD(); }
+  void ST7920_set_dat()                     { ST7920_SET_DAT(); }
+  void ST7920_write_byte(const uint8_t val) { ST7920_WRITE_BYTE(val); }
+#endif
 
 #endif // U8GLIB_ST7920 && !U8G_HAL_LINKS && !__SAM3X8E__

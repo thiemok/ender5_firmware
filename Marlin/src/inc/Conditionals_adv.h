@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,8 @@
  * Conditionals_adv.h
  * Defines that depend on advanced configuration.
  */
+
+#define HAS_CUTTER EITHER(SPINDLE_FEATURE, LASER_FEATURE)
 
 #if !defined(__AVR__) || !defined(USBCON)
   // Define constants and variables for buffering serial data.
@@ -77,5 +79,23 @@
     #ifndef ACTION_ON_G29_FAILURE
       #define ACTION_ON_G29_FAILURE "probe_failed"
     #endif
+  #endif
+#endif
+
+#if ENABLED(FYSETC_MINI_12864_2_1)
+  #define LED_CONTROL_MENU
+  #define LED_USER_PRESET_STARTUP
+  #define LED_COLOR_PRESETS
+  #ifndef LED_USER_PRESET_RED
+    #define LED_USER_PRESET_RED        255
+  #endif
+  #ifndef LED_USER_PRESET_GREEN
+    #define LED_USER_PRESET_GREEN      128
+  #endif
+  #ifndef LED_USER_PRESET_BLUE
+    #define LED_USER_PRESET_BLUE         0
+  #endif
+  #ifndef LED_USER_PRESET_BRIGHTNESS
+    #define LED_USER_PRESET_BRIGHTNESS 255
   #endif
 #endif

@@ -41,21 +41,9 @@
 //
 // Limit Switches
 //
-#if ENABLED(ENDER5)
-  #define X_MAX_PIN           P1_24   // 10k pullup to 3.3V
-  //#define X_MAX_PIN           P1_26   // 10k pullup to 3.3V
-  #define Y_MAX_PIN           P1_25   // 10k pullup to 3.3V
-  //#define Y_MAX_PIN           P1_25   // 10k pullup to 3.3V
-  #define Z_MIN_PIN           P1_26   // 10k pullup to 3.3V
-  //#define Z_MAX_PIN           P1_29   // 10k pullup to 3.3V
-#else
-  #define X_MIN_PIN           P1_24   // 10k pullup to 3.3V
-  //#define X_MAX_PIN           P1_26   // 10k pullup to 3.3V
-  #define Y_MIN_PIN           P1_25   // 10k pullup to 3.3V
-  //#define Y_MAX_PIN           P1_25   // 10k pullup to 3.3V
-  #define Z_MIN_PIN           P1_26   // 10k pullup to 3.3V
-  //#define Z_MAX_PIN           P1_29   // 10k pullup to 3.3V
-#endif
+#define X_STOP_PIN         P1_24
+#define Y_STOP_PIN         P1_25
+#define Z_STOP_PIN         P1_26
 
 //
 // Steppers
@@ -129,11 +117,8 @@
 //
 // Auto fans
 //
-#if HOTENDS == 3
-  #define AUTO_FAN_PIN      P1_18   // FET 6
-#else
-  #define AUTO_FAN_PIN      P1_22   // FET 3
-#endif
+#define AUTO_FAN_PIN      P1_22   // FET 3
+
 #define ORIG_E0_AUTO_FAN_PIN  AUTO_FAN_PIN
 #define ORIG_E1_AUTO_FAN_PIN  AUTO_FAN_PIN
 #define ORIG_E2_AUTO_FAN_PIN  AUTO_FAN_PIN
@@ -153,52 +138,20 @@
 // Display
 
 #if ENABLED(CR10_STOCKDISPLAY)
-
-  #define BEEPER_PIN        P1_31   // EXP1-1
-
-  #define BTN_EN1           P3_26   // EXP2-5
-  #define BTN_EN2           P3_25   // EXP2-3
-  #define BTN_ENC           P1_30   // EXP1-2
-
-  #define LCD_PINS_RS       P0_16   // EXP1-4
-//  #define LCD_SDSS          P0_28   // EXP2-4
-  #define LCD_PINS_ENABLE   P0_18   // EXP1-3
-  #define LCD_PINS_D4       P0_15   // EXP1-5
-
-  #define KILL_PIN          P2_11   // EXP2-10
-
-
-#endif // ULTRA_LCD
-
-// SD Support
-//
-//#define USB_SD_DISABLED     // Disable host access to SD card as mass storage device through USB
-//#define USB_SD_ONBOARD      // Enable host access to SD card as mass storage device through USB
-
-//#define LPC_SD_LCD          // Marlin uses the SD drive attached to the LCD
-#define LPC_SD_ONBOARD        // Marlin uses the SD drive on the control board.  There is no SD detect pin
-                              // for the onboard card.  Init card from LCD menu or send M21 whenever printer
-                              // is powered on to enable SD access.
-#if ENABLED(LPC_SD_LCD)
-
-  #define SCK_PIN            P0_15
-  #define MISO_PIN           P0_17
-  #define MOSI_PIN           P0_18
-  #define SS_PIN             P1_23   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS      P0_06   // Chip select for "System" SD card
-
-#elif ENABLED(LPC_SD_ONBOARD)
-
-  #if ENABLED(USB_SD_ONBOARD)
-    // When sharing the SD card with a PC we want the menu options to
-    // mount/unmount the card and refresh it. So we disable card detect.
-    #define SHARED_SD_CARD
-    #undef SD_DETECT_PIN // there is also no detect pin for the onboard card
-  #endif
-  #define SCK_PIN            P0_07
-  #define MISO_PIN           P0_08
-  #define MOSI_PIN           P0_09
-  #define SS_PIN             P0_06   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS      P0_06   // Chip select for "System" SD card
-
+  #define BEEPER_PIN        P1_31
+  #define BTN_EN1           P3_26
+  #define BTN_EN2           P3_25
+  #define BTN_ENC           P1_30
+  #define LCD_PINS_RS       P0_16
+  #define LCD_PINS_ENABLE   P0_18
+  #define LCD_PINS_D4       P0_15
+  #define KILL_PIN          P2_11
 #endif
+
+#define SDCARD_CONNECTION ONBOARD
+
+#define SCK_PIN            P0_07
+#define MISO_PIN           P0_08
+#define MOSI_PIN           P0_09
+#define ONBOARD_SD_CS_PIN  P0_06
+#define SS_PIN             ONBOARD_SD_CS_PIN

@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -134,8 +134,8 @@
 #define TEMP_0_PIN          0   // ANALOG A0
 #define TEMP_1_PIN          1   // ANALOG A1
 #define TEMP_2_PIN          2   // ANALOG A2
-#define TEMP_3_PIN          3   // ANALOG A2
-#define TEMP_BED_PIN        4   // ANALOG A3
+#define TEMP_3_PIN          3   // ANALOG A3
+#define TEMP_BED_PIN        4   // ANALOG A4
 
 // The thermocouple uses Analog pins
 #if ENABLED(VER_WITH_THERMOCOUPLE) // Defined in Configuration.h
@@ -161,18 +161,18 @@
 
 // MKS TFT / Nextion Use internal USART-1
 #define TFT_LCD_MODULE_COM        1
-#define TFT_LCD_MODULE_BAUDRATE   115600
+#define TFT_LCD_MODULE_BAUDRATE   115200
 
 // ESP WiFi Use internal USART-2
 #define ESP_WIFI_MODULE_COM       2
-#define ESP_WIFI_MODULE_BAUDRATE  115600
+#define ESP_WIFI_MODULE_BAUDRATE  115200
 #define ESP_WIFI_MODULE_RESET_PIN -1
 #define PIGGY_GPIO_PIN            -1
 
 //
 // EEPROM
 //
-#define E2END 0x8000  // 32Kb (24lc256)
+#define E2END 0x7FFF  // 32Kb (24lc256)
 #define I2C_EEPROM    // EEPROM on I2C-0
 //#define EEPROM_SD   // EEPROM on SDCARD
 //#define SPI_EEPROM  // EEPROM on SPI-0
@@ -186,39 +186,57 @@
 //
 // LCD / Controller
 //
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
+
+  #if ANY(RADDS_DISPLAY, REPRAP_DISCOUNT_SMART_CONTROLLER, REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER)
+    #define BEEPER_PIN      62
+    #define LCD_PINS_D4     48
+    #define LCD_PINS_D5     50
+    #define LCD_PINS_D6     52
+    #define LCD_PINS_D7     53
+    #define SD_DETECT_PIN   51
+  #endif
 
   #if EITHER(RADDS_DISPLAY, REPRAP_DISCOUNT_SMART_CONTROLLER)
 
-    #define BEEPER_PIN      62
-
     #define LCD_PINS_RS     63
     #define LCD_PINS_ENABLE 64
-    #define LCD_PINS_D4     48
-    #define LCD_PINS_D5     50
-    #define LCD_PINS_D6     52
-    #define LCD_PINS_D7     53
-
-    #define SD_DETECT_PIN   51
 
   #elif ENABLED(REPRAP_DISCOUNT_FULL_GRAPHIC_SMART_CONTROLLER)
 
-    #define BEEPER_PIN      62
-
     #define LCD_PINS_RS     52
     #define LCD_PINS_ENABLE 53
-    #define LCD_PINS_D4     48
-    #define LCD_PINS_D5     50
-    #define LCD_PINS_D6     52
-    #define LCD_PINS_D7     53
-
-    #define SD_DETECT_PIN   51
 
   #elif HAS_SSD1306_OLED_I2C
 
     #define BEEPER_PIN      62
     #define LCD_SDSS        10
     #define SD_DETECT_PIN   51
+
+  #elif ENABLED(FYSETC_MINI_12864)
+
+    #define BEEPER_PIN      62
+    #define DOGLCD_CS       64
+    #define DOGLCD_A0       63
+
+    //#define FORCE_SOFT_SPI    // Use this if default of hardware SPI causes display problems
+                                //   results in LCD soft SPI mode 3, SD soft SPI mode 0
+
+    #define LCD_RESET_PIN   48   // Must be high or open for LCD to operate normally.
+
+    #if EITHER(FYSETC_MINI_12864_1_2, FYSETC_MINI_12864_2_0)
+      #ifndef RGB_LED_R_PIN
+        #define RGB_LED_R_PIN 50   // D5
+      #endif
+      #ifndef RGB_LED_G_PIN
+        #define RGB_LED_G_PIN 52   // D6
+      #endif
+      #ifndef RGB_LED_B_PIN
+        #define RGB_LED_B_PIN 53   // D7
+      #endif
+    #elif ENABLED(FYSETC_MINI_12864_2_1)
+      #define NEOPIXEL_PIN    50   // D5
+    #endif
 
   #elif ENABLED(MKS_MINI_12864)
 
@@ -237,4 +255,4 @@
     #define BTN_ENC         40
   #endif
 
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD

@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,8 +28,12 @@
   #error "Oops! Make sure you have the LPC1768 environment selected in your IDE."
 #endif
 
-#define BOARD_NAME        "MKS SBASE"
-#define BOARD_WEBSITE_URL "https://github.com/makerbase-mks/MKS-SBASE"
+#ifndef BOARD_NAME
+  #define BOARD_NAME        "MKS SBASE"
+#endif
+#ifndef BOARD_WEBSITE_URL
+  #define BOARD_WEBSITE_URL "https://github.com/makerbase-mks/MKS-SBASE"
+#endif
 
 #define LED_PIN            P1_18   // Used as a status indicator
 #define LED2_PIN           P1_19
@@ -154,25 +158,13 @@
 #define ENET_TXD0          P1_00   // J12-11
 #define ENET_TXD1          P1_01   // J12-12
 
-/**
- * The SBase can share the on-board SD card with a PC via USB the following
- * definitions control this feature:
- */
-//#define USB_SD_DISABLED
-#define USB_SD_ONBOARD        // Provide the onboard SD card to the host as a USB mass storage device
+#ifndef SDCARD_CONNECTION
+  #define SDCARD_CONNECTION ONBOARD
+#endif
 
-/**
- * There are a number of configurations available for the SBase SD card reader.
- * - A custom cable can be used to allow access to the LCD based SD card.
- * - A standard cable can be used for access to the LCD SD card (but no SD detect).
- * - The onboard SD card can be used and optionally shared with a PC via USB.
- */
+#define ONBOARD_SD_CS_PIN  P0_06   // Chip select for "System" SD card
 
-//#define LPC_SD_CUSTOM_CABLE // Use a custom cable to access the SD
-//#define LPC_SD_LCD          // Marlin uses the SD drive attached to the LCD
-#define LPC_SD_ONBOARD        // Marlin uses the SD drive attached to the control board
-
-#if ENABLED(LPC_SD_CUSTOM_CABLE)
+#if SD_CONNECTION_IS(CUSTOM_CABLE)
 
   /**
    * A custom cable is needed. See the README file in the
@@ -190,37 +182,23 @@
   #define SCK_PIN          P1_22   // J8-2 (moved from EXP2 P0.7)
   #define MISO_PIN         P1_23   // J8-3 (moved from EXP2 P0.8)
   #define MOSI_PIN         P2_12   // J8-4 (moved from EXP2 P0.9)
-  #define SS_PIN           P0_28   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS    P0_06   // Chip select for "System" SD card
+  #define SS_PIN           P0_28
   #define LPC_SOFTWARE_SPI  // With a custom cable we need software SPI because the
                             // selected pins are not on a hardware SPI controller
-#elif ENABLED(LPC_SD_LCD)
-
+#elif SD_CONNECTION_IS(LCD)
   // use standard cable and header, SPI and SD detect sre shared with on-board SD card
   // hardware SPI is used for both SD cards. The detect pin is shred between the
   // LCD and onboard SD readers so we disable it.
   #define SCK_PIN          P0_07
   #define MISO_PIN         P0_08
   #define MOSI_PIN         P0_09
-  #define SS_PIN           P0_28   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS    P0_06   // Chip select for "System" SD card
-
-#elif ENABLED(LPC_SD_ONBOARD)
-
-  // The external SD card is not used. Hardware SPI is used to access the card.
-  #if ENABLED(USB_SD_ONBOARD)
-    // When sharing the SD card with a PC we want the menu options to
-    // mount/unmount the card and refresh it. So we disable card detect.
-    #define SHARED_SD_CARD
-  #else
-    #define SD_DETECT_PIN  P0_27
-  #endif
+  #define SS_PIN           P0_28
+#elif SD_CONNECTION_IS(ONBOARD)
+  #define SD_DETECT_PIN    P0_27
   #define SCK_PIN          P0_07
   #define MISO_PIN         P0_08
   #define MOSI_PIN         P0_09
-  #define SS_PIN           P0_06   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS    P0_06   // Chip select for "System" SD card
-
+  #define SS_PIN           ONBOARD_SD_CS_PIN
 #endif
 
 /**
@@ -236,7 +214,7 @@
  * that the garbage/lines are erased immediately after the SD card accesses are completed.
  */
 
-#if ENABLED(ULTRA_LCD)
+#if HAS_SPI_LCD
   #define BEEPER_PIN       P1_31   // EXP1.1
   #define BTN_ENC          P1_30   // EXP1.2
   #define BTN_EN1          P3_26   // EXP2.5
@@ -249,11 +227,54 @@
     #define DOGLCD_SCK     SCK_PIN
     #define DOGLCD_MOSI    MOSI_PIN
   #endif
+
+  #if ENABLED(FYSETC_MINI_12864)
+    /**
+     * The Fysetc display can NOT use the SCK and MOSI pins on EXP2, so a
+     * special cable is needed to go between EXP2 on the FYSETC and the
+     * controller board's EXP2 and J8. It also means that a software SPI
+     * is needed to drive those pins.
+     *
+     * The Fysetc requires mode 3 SPI interface.
+     *
+     * Pins 6, 7 & 8 on EXP2 are no connects. That means a second special
+     * cable will be needed if the RGB LEDs are to be active.
+     */
+    #define DOGLCD_CS      LCD_PINS_ENABLE // EXP1.3  (LCD_EN on Fysetc schematic)
+    #define DOGLCD_A0      LCD_PINS_RS     // EXP1.4  (LCD_A0 on Fysetc schematic)
+    #define DOGLCD_SCK     P2_11           // J8-5  (SCK on Fysetc schematic)
+    #define DOGLCD_MOSI    P4_28           // J8-6  (MOSI on Fysetc schematic)
+
+    //#define FORCE_SOFT_SPI    // Use this if default of hardware SPI causes display problems
+                                //   results in LCD soft SPI mode 3, SD soft SPI mode 0
+
+    #if EITHER(FYSETC_MINI_12864_1_2, FYSETC_MINI_12864_2_0)
+      #ifndef RGB_LED_R_PIN
+        #define RGB_LED_R_PIN P2_12        // J8-4  (LCD_D6 on Fysetc schematic)
+      #endif
+      #ifndef RGB_LED_G_PIN
+        #define RGB_LED_G_PIN P1_23        // J8-3  (LCD_D5 on Fysetc schematic)
+      #endif
+      #ifndef RGB_LED_B_PIN
+        #define RGB_LED_B_PIN P1_22        // J8-2  (LCD_D7 on Fysetc schematic)
+      #endif
+    #elif ENABLED(FYSETC_MINI_12864_2_1)
+      #define NEOPIXEL_PIN    P2_12
+    #endif
+
+  #elif ENABLED(MINIPANEL)
+    // GLCD features
+    // Uncomment screen orientation
+    //#define LCD_SCREEN_ROT_90
+    //#define LCD_SCREEN_ROT_180
+    //#define LCD_SCREEN_ROT_270
+  #endif
+
 #endif
 
 /**
  * Example for trinamic drivers using the J8 connector on MKs Sbase.
- * 2130s need 1 pin for each driver. 2208s need 2 pins for serial control.
+ * 2130s need 1 pin for each driver. 2208/2209s need 2 pins for serial control.
  * This board does not have enough pins to use hardware serial.
  */
 
@@ -281,7 +302,7 @@
  #endif
 #endif
 
-#if HAS_DRIVER(TMC2208)
+#if MB(MKS_SBASE) && (HAS_DRIVER(TMC2208) || HAS_DRIVER(TMC2209))
   // The shortage of pins becomes apparent.
   // Worst case you may have to give up the LCD
   // RX pins need to be interrupt capable

@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,6 +35,9 @@
 #if MB(5DPRINT)
   #define DIGIPOT_I2C_FACTOR 117.96
   #define DIGIPOT_I2C_MAX_CURRENT 1.736
+#elif MB(AZTEEG_X5_MINI) || MB(AZTEEG_X5_MINI_WIFI)
+  #define DIGIPOT_I2C_FACTOR 113.5
+  #define DIGIPOT_I2C_MAX_CURRENT 2.0
 #else
   #define DIGIPOT_I2C_FACTOR 106.7
   #define DIGIPOT_I2C_MAX_CURRENT 2.5

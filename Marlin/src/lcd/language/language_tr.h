@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -100,10 +100,9 @@
 #define MSG_IDEX_MODE_DUPLICATE             _UxGT("Kopyala")
 #define MSG_IDEX_MODE_MIRRORED_COPY         _UxGT("Yansıtılmış kopya")
 #define MSG_IDEX_MODE_FULL_CTRL             _UxGT("Tam Kontrol")
-#define MSG_IDEX_X_OFFSET                   _UxGT("2. nozul X")
-#define MSG_IDEX_Y_OFFSET                   _UxGT("2. nozul Y")
-#define MSG_IDEX_Z_OFFSET                   _UxGT("2. nozul Z")
-#define MSG_IDEX_SAVE_OFFSETS               _UxGT("Ofsetleri Kaydet")
+#define MSG_X_OFFSET                        _UxGT("2. nozul X")
+#define MSG_Y_OFFSET                        _UxGT("2. nozul Y")
+#define MSG_Z_OFFSET                        _UxGT("2. nozul Z")
 #define MSG_UBL_MANUAL_MESH                 _UxGT("Elle Mesh Oluştur")
 #define MSG_UBL_BC_INSERT                   _UxGT("Altlık & Ölçü Ver")
 #define MSG_UBL_BC_INSERT2                  _UxGT("Ölçü")

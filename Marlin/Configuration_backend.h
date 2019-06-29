@@ -93,7 +93,7 @@
   #else
     #define INVERT_X_DIR true
   #endif
-  
+
   #if ENABLED(REVERSE_Y_MOTOR)
     #define INVERT_Y_DIR false
   #else
@@ -239,7 +239,7 @@
 #define TEMP_SENSOR_4 0
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_CHAMBER 0
-#define CHAMBER_HEATER_PIN -1
+#define HEATER_CHAMBER_PIN -1
 
 #if ENABLED(AC_BED)
   #define TEMP_SENSOR_BED 0
@@ -445,10 +445,6 @@
 #if DISABLED(S_CURVE_ACCELERATION_DISABLE)
   #define S_CURVE_ACCELERATION
 #endif
-
-#define MANUAL_X_HOME_POS 0
-#define MANUAL_Y_HOME_POS 0
-#define MANUAL_Z_HOME_POS 0
 
 #define X_ENABLE_ON 0
 #define Y_ENABLE_ON 0

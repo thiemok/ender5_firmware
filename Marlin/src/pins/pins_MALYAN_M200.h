@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
  * MALYAN M200 pin assignments
  */
 
-#ifndef __STM32F1__
+#if !defined(__STM32F1__) && !defined(STM32F1xx) && !defined(STM32F0xx)
   #error "Oops! You must be compiling for STM32."
 #endif
 
@@ -36,6 +36,13 @@
 #define FLASH_EEPROM_EMULATION
 
 #define SDSS SS_PIN
+
+// Based on PWM timer usage, we have to use these timers and soft PWM for the fans
+// On STM32F103:
+// PB3, PB6, PB7, and PB8 can be used with pwm, which rules out TIM2 and TIM4.
+// On STM32F070, 16 and 17 are in use, but 1 and 3 are available.
+#define STEP_TIMER 1
+#define TEMP_TIMER 3
 
 //
 // Limit Switches

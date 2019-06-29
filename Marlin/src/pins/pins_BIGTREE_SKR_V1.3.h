@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,9 @@
 #ifndef BOARD_NAME
   #define BOARD_NAME "BIGTREE SKR V1.3"
 #endif
+
+// Ignore temp readings during develpment.
+//#define BOGUS_TEMPERATURE_FAILSAFE_OVERRIDE
 
 //
 // Servos
@@ -104,9 +107,9 @@
   #define TMC_SW_SCK       P0_04
 #endif
 
-#if HAS_DRIVER(TMC2208)
+#if HAS_DRIVER(TMC2208) || HAS_DRIVER(TMC2209)
     /**
-   * TMC2208 stepper drivers
+   * TMC2208/TMC2209 stepper drivers
    *
    * Hardware serial communication ports.
    * If undefined software serial is used according to the pins below
@@ -176,78 +179,108 @@
 |               ￣￣                                               ￣￣
 |               EXP2                                              EXP1
 */
-#if ENABLED(ULTRA_LCD)
-  #define BEEPER_PIN        P1_30   // (37) not 5V tolerant
-  #define BTN_ENC           P0_28   // (58) open-drain
+#if HAS_SPI_LCD
+  #define BEEPER_PIN       P1_30   // (37) not 5V tolerant
+  #define BTN_ENC          P0_28   // (58) open-drain
 
   #if ENABLED(CR10_STOCKDISPLAY)
-    #define LCD_PINS_RS     P1_22
+    #define LCD_PINS_RS    P1_22
 
-    #define BTN_EN1         P1_18
-    #define BTN_EN2         P1_20
+    #define BTN_EN1        P1_18
+    #define BTN_EN2        P1_20
 
     #define LCD_PINS_ENABLE P1_23
-    #define LCD_PINS_D4     P1_21
+    #define LCD_PINS_D4    P1_21
 
   #else
+    #define LCD_PINS_RS    P1_19
 
-    #define LCD_PINS_RS     P1_19
-
-    #define BTN_EN1         P3_26   // (31) J3-2 & AUX-4
-    #define BTN_EN2         P3_25   // (33) J3-4 & AUX-4
-    #define SD_DETECT_PIN   P1_31   // (49) (NOT 5V tolerant)
-
-    #define LCD_SDSS        P0_16   // (16) J3-7 & AUX-4
+    #define BTN_EN1        P3_26   // (31) J3-2 & AUX-4
+    #define BTN_EN2        P3_25   // (33) J3-4 & AUX-4
 
     #define LCD_PINS_ENABLE P1_18
-    #define LCD_PINS_D4     P1_20
+    #define LCD_PINS_D4    P1_20
 
-    #if ENABLED(ULTIPANEL)
-      #define LCD_PINS_D5   P1_21
-      #define LCD_PINS_D6   P1_22
-      #define LCD_PINS_D7   P1_23
-    #endif
+    #define LCD_SDSS       P0_16   // (16) J3-7 & AUX-4
+    #define SD_DETECT_PIN  P1_31   // (49) (NOT 5V tolerant)
+
+    #if ENABLED(FYSETC_MINI_12864)
+      #define DOGLCD_CS    P1_18
+      #define DOGLCD_A0    P1_19
+      #define DOGLCD_SCK   P0_15
+      #define DOGLCD_MOSI  P0_18
+      #define FORCE_SOFT_SPI
+
+      #define LCD_BACKLIGHT_PIN -1
+
+      #define FORCE_SOFT_SPI      // Use this if default of hardware SPI causes display problems
+                                  //   results in LCD soft SPI mode 3, SD soft SPI mode 0
+
+      #define LCD_RESET_PIN P1_20   // Must be high or open for LCD to operate normally.
+
+      #if EITHER(FYSETC_MINI_12864_1_2, FYSETC_MINI_12864_2_0)
+        #ifndef RGB_LED_R_PIN
+          #define RGB_LED_R_PIN P1_21
+        #endif
+        #ifndef RGB_LED_G_PIN
+          #define RGB_LED_G_PIN P1_22
+        #endif
+        #ifndef RGB_LED_B_PIN
+          #define RGB_LED_B_PIN P1_23
+        #endif
+      #elif ENABLED(FYSETC_MINI_12864_2_1)
+        #define NEOPIXEL_PIN    P1_21
+      #endif
+
+    #else // !FYSETC_MINI_12864
+
+      #if ENABLED(MKS_MINI_12864)
+        #define DOGLCD_CS  P1_21
+        #define DOGLCD_A0  P1_22
+      #endif
+
+      #if ENABLED(ULTIPANEL)
+        #define LCD_PINS_D5 P1_21
+        #define LCD_PINS_D6 P1_22
+        #define LCD_PINS_D7 P1_23
+      #endif
+
+    #endif // !FYSETC_MINI_12864
 
   #endif
 
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD
 
-//#define USB_SD_DISABLED
-#define USB_SD_ONBOARD        // Provide the onboard SD card to the host as a USB mass storage device
+//
+// SD Support
+//
 
-#define LPC_SD_LCD            // Marlin uses the SD drive attached to the LCD
-//#define LPC_SD_ONBOARD        // Marlin uses the SD drive on the control board
+#ifndef SDCARD_CONNECTION
+  #define SDCARD_CONNECTION LCD
+#endif
 
-#if ENABLED(LPC_SD_LCD)
+#define ONBOARD_SD_CS_PIN  P0_06   // Chip select for "System" SD card
 
+#if SD_CONNECTION_IS(LCD)
   #define SCK_PIN          P0_15
   #define MISO_PIN         P0_17
   #define MOSI_PIN         P0_18
-  #define SS_PIN           P0_16   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS    P0_06   // Chip select for "System" SD card
-
-#elif ENABLED(LPC_SD_ONBOARD)
-
-  #if ENABLED(USB_SD_ONBOARD)
-    // When sharing the SD card with a PC we want the menu options to
-    // mount/unmount the card and refresh it. So we disable card detect.
-    #define SHARED_SD_CARD
-    #undef SD_DETECT_PIN
-    //#define SD_DETECT_PIN  P0_27   // (57) open-drain
-  #endif
-
+  #define SS_PIN           P0_16
+#elif SD_CONNECTION_IS(ONBOARD)
+  #undef SD_DETECT_PIN
+  #define SD_DETECT_PIN    P0_27
   #define SCK_PIN          P0_07
   #define MISO_PIN         P0_08
   #define MOSI_PIN         P0_09
-  #define SS_PIN           P0_06   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS    P0_06   // Chip select for "System" SD card
-
+  #define SS_PIN           ONBOARD_SD_CS_PIN
+#elif SD_CONNECTION_IS(CUSTOM_CABLE)
+  #error "No custom SD drive cable defined for this board."
 #endif
 
- /**
-  * Special pins
-  *   P1_30  (37) (NOT 5V tolerant)
-  *   P1_31  (49) (NOT 5V tolerant)
-  *   P0_27  (57) (Open collector)
-  *   P0_28  (58) (Open collector)
-  */
+/**
+ * Special pins
+ *   P1_30  (37) (NOT 5V tolerant)
+ *   P1_31  (49) (NOT 5V tolerant)
+ *   P0_27  (57) (Open collector)
+ *   P0_28  (58) (Open collector)
+ */

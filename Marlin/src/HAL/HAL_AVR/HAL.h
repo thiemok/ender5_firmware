@@ -1,6 +1,6 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  * Copyright (c) 2016 Bob Cousins bobcousins42@googlemail.com
  *
  * This program is free software: you can redistribute it and/or modify
@@ -24,14 +24,7 @@
 
 #include <stdint.h>
 
-#include <Arduino.h>
-
-#include <util/delay.h>
-#include <avr/eeprom.h>
-#include <avr/pgmspace.h>
-#include <avr/interrupt.h>
-#include <avr/io.h>
-
+#include "../shared/Marduino.h"
 #include "../shared/HAL_SPI.h"
 #include "fastio_AVR.h"
 #include "watchdog_AVR.h"
@@ -42,6 +35,12 @@
 #else
   #include "MarlinSerial.h"
 #endif
+
+#include <util/delay.h>
+#include <avr/eeprom.h>
+#include <avr/pgmspace.h>
+#include <avr/interrupt.h>
+#include <avr/io.h>
 
 // --------------------------------------------------------------------------
 // Defines
@@ -69,6 +68,7 @@ typedef uint16_t hal_timer_t;
 
 typedef int8_t pin_t;
 
+#define SHARED_SERVOS HAS_SERVOS
 #define HAL_SERVO_LIB Servo
 
 // --------------------------------------------------------------------------
@@ -108,6 +108,8 @@ typedef int8_t pin_t;
 // --------------------------------------------------------------------------
 // Public functions
 // --------------------------------------------------------------------------
+
+void HAL_init(void);
 
 //void cli(void);
 

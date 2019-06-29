@@ -158,9 +158,7 @@ void ST7920_Lite_Status_Screen::entry_mode_select(const bool ac_increase, const 
 // function for scroll_or_addr_select()
 void ST7920_Lite_Status_Screen::_scroll_or_addr_select(const bool sa) {
   extended_function_set(true);
-  cmd(0b00100010 |
-    (sa   ? 0b000001 : 0)
-  );
+  cmd(0b00000010 | (sa ? 0b00000001 : 0));
   current_bits.sa = sa;
 }
 
@@ -686,7 +684,7 @@ bool ST7920_Lite_Status_Screen::indicators_changed() {
   // them only during blinks we gain a bit of stability.
   const bool       blink             = ui.get_blink();
   const uint16_t   feedrate_perc     = feedrate_percentage;
-  const uint16_t   fs                = (thermalManager.fan_speed[0] * uint16_t(thermalManager.fan_speed_scaler[0])) >> 7;
+  const uint16_t   fs                = thermalManager.scaledFanSpeed(0);
   const int16_t    extruder_1_target = thermalManager.degTargetHotend(0);
   #if HOTENDS > 1
     const int16_t  extruder_2_target = thermalManager.degTargetHotend(1);
@@ -736,7 +734,7 @@ void ST7920_Lite_Status_Screen::update_indicators(const bool forceUpdate) {
 
     #if ENABLED(ADAPTIVE_FAN_SLOWING)
       if (!blink && thermalManager.fan_speed_scaler[0] < 128)
-        spd = (spd * thermalManager.fan_speed_scaler[0]) >> 7;
+        spd = thermalManager.scaledFanSpeed(0, spd);
     #endif
 
     draw_fan_speed(thermalManager.fanPercent(spd));
@@ -906,34 +904,6 @@ void ST7920_Lite_Status_Screen::clear_text_buffer() {
   _extended_function_set(true, true); // Restore state to what u8g expects.
   ncs();
 }
-
-#if ENABLED(U8GLIB_ST7920) && !defined(U8G_HAL_LINKS) && !defined(__SAM3X8E__)
-
-  #include "ultralcd_st7920_u8glib_rrd_AVR.h"
-
-  void ST7920_Lite_Status_Screen::cs() {
-    ST7920_CS();
-    current_bits.synced = false;
-  }
-
-  void ST7920_Lite_Status_Screen::ncs() {
-    ST7920_NCS();
-    current_bits.synced = false;
-  }
-
-  void ST7920_Lite_Status_Screen::sync_cmd() {
-    ST7920_SET_CMD();
-  }
-
-  void ST7920_Lite_Status_Screen::sync_dat() {
-    ST7920_SET_DAT();
-  }
-
-  void ST7920_Lite_Status_Screen::write_byte(const uint8_t data) {
-    ST7920_WRITE_BYTE(data);
-  }
-
-#endif
 
 void MarlinUI::draw_status_screen() {
   ST7920_Lite_Status_Screen::update(false);

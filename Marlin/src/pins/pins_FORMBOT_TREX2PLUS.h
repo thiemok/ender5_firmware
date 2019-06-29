@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -155,9 +155,8 @@
 //
 // Misc. Functions
 //
-#define CASE_LIGHT_PIN      8
 #define SDSS               53
-#ifndef ROXYs_TRex
+#ifndef LED_PIN
   #define LED_PIN          13   // The Formbot v 1 board has almost no unassigned pins on it.  The Board's LED
 #endif                          // is a good place to get a signal to control the Max7219 LED Matrix.
 
@@ -168,24 +167,28 @@
   #define PS_ON_PIN        12
 #endif
 
+#define CASE_LIGHT_PIN      8
+
 //
 // LCD / Controller
 //
 // Formbot only supports REPRAP_DISCOUNT_SMART_CONTROLLER
 //
 #if ENABLED(REPRAP_DISCOUNT_SMART_CONTROLLER)
+  #ifndef BEEPER_PIN
+    #define BEEPER_PIN     37
+  #endif
+  #define BTN_EN1          31
+  #define BTN_EN2          33
+  #define BTN_ENC          35
+  #define SD_DETECT_PIN    49
+  #ifndef KILL_PIN
+    #define KILL_PIN       41
+  #endif
   #define LCD_PINS_RS      16
   #define LCD_PINS_ENABLE  17
   #define LCD_PINS_D4      23
   #define LCD_PINS_D5      25
   #define LCD_PINS_D6      27
   #define LCD_PINS_D7      29
-  #define BTN_EN1          31
-  #define BTN_EN2          33
-  #define BTN_ENC          35
-  #define SD_DETECT_PIN    49
-  #ifndef ROXYs_TRex
-    #define KILL_PIN       41
-    #define BEEPER_PIN     37
-  #endif
 #endif

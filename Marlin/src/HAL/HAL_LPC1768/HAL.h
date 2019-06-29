@@ -1,7 +1,7 @@
 /**
  * Marlin 3D Printer Firmware
  *
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  * Copyright (c) 2016 Bob Cousins bobcousins42@googlemail.com
  * Copyright (c) 2015-2016 Nico Tonnhofer wurstnase.reprap@gmail.com
  *
@@ -27,9 +27,8 @@
  */
 
 #define CPU_32_BIT
-#define HAL_INIT
 
-void HAL_init();
+void HAL_init(void);
 
 #include <stdint.h>
 #include <stdarg.h>
@@ -37,17 +36,17 @@ void HAL_init();
 
 extern "C" volatile millis_t _millis;
 
-#include <Arduino.h>
-#include <pinmapping.h>
-#include <CDCSerial.h>
-
+#include "../shared/Marduino.h"
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
 #include "fastio.h"
-#include <adc.h>
 #include "watchdog.h"
 #include "HAL_timers.h"
 #include "MarlinSerial.h"
+
+#include <adc.h>
+#include <pinmapping.h>
+#include <CDCSerial.h>
 
 //
 // Default graphical display delays
@@ -146,6 +145,9 @@ using FilteredADC = LPC176x::ADC<ADC_LOWPASS_K_VALUE, ADC_MEDIAN_FILTER_SIZE>;
 #define HAL_START_ADC(pin)     FilteredADC::start_conversion(pin)
 #define HAL_READ_ADC()         FilteredADC::get_result()
 #define HAL_ADC_READY()        FilteredADC::finished_conversion()
+
+// A grace period to allow ADC readings to stabilize, preventing false alarms
+#define THERMAL_PROTECTION_GRACE_PERIOD 1000
 
 // Parse a G-code word into a pin index
 int16_t PARSED_PIN_INDEX(const char code, const int16_t dval);

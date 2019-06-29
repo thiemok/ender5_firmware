@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,6 +50,14 @@
 
 #define DEBUG_OUT ENABLED(DEBUG_LEVELING_FEATURE)
 #include "../../../core/debug_out.h"
+
+#if ENABLED(EXTENSIBLE_UI)
+  #include "../../../lcd/extensible_ui/ui_api.h"
+#endif
+
+#if HOTENDS > 1
+  #include "../../../module/tool_change.h"
+#endif
 
 #if ABL_GRID
   #if ENABLED(PROBE_Y_FIRST)
@@ -276,7 +284,7 @@ G29_TYPE GcodeSuite::G29() {
    */
   if (!g29_in_progress) {
 
-    #if ENABLED(DUAL_X_CARRIAGE)
+    #if HOTENDS > 1
       if (active_extruder != 0) tool_change(0);
     #endif
 
@@ -958,7 +966,7 @@ G29_TYPE GcodeSuite::G29() {
     #ifdef Z_PROBE_END_SCRIPT
       if (DEBUGGING(LEVELING)) DEBUG_ECHOLNPAIR("Z Probe End Script: ", Z_PROBE_END_SCRIPT);
       planner.synchronize();
-      enqueue_and_echo_commands_P(PSTR(Z_PROBE_END_SCRIPT));
+      process_subcommands_now_P(PSTR(Z_PROBE_END_SCRIPT));
     #endif
 
     // Auto Bed Leveling is complete! Enable if possible.

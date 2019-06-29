@@ -1,7 +1,7 @@
 /**
  * Marlin 3D Printer Firmware
  *
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  * Copyright (c) 2016 Bob Cousins bobcousins42@googlemail.com
  * Copyright (c) 2015-2016 Nico Tonnhofer wurstnase.reprap@gmail.com
  *
@@ -47,22 +47,23 @@ uint8_t _getc();
 //arduino: Print.h
 #define DEC 10
 #define HEX 16
-#define OCT 8
-#define BIN 2
+#define OCT  8
+#define BIN  2
 //arduino: binary.h (weird defines)
 #define B01 1
 #define B10 2
 
 #include "hardware/Clock.h"
 
-#include <Arduino.h>
-
+#include "../shared/Marduino.h"
 #include "../shared/math_32bit.h"
 #include "../shared/HAL_SPI.h"
 #include "fastio.h"
 #include "watchdog.h"
 #include "HAL_timers.h"
 #include "serial.h"
+
+#define SHARED_SERVOS HAS_SERVOS
 
 extern HalSerial usb_serial;
 #define MYSERIAL0 usb_serial
@@ -81,7 +82,9 @@ extern HalSerial usb_serial;
 #define ENABLE_ISRS()
 #define DISABLE_ISRS()
 
-//Utility functions
+inline void HAL_init(void) { }
+
+// Utility functions
 int freeMemory(void);
 
 // SPI: Extended functions which take a channel number (hardware SPI only)

@@ -51,7 +51,7 @@
   #define THERMAL_PROTECTION_PERIOD HOTEND_THERMAL_PROTECTION_TIME
   #define THERMAL_PROTECTION_HYSTERESIS 4
 
-  #define ADAPTIVE_FAN_SLOWING              
+  #define ADAPTIVE_FAN_SLOWING
   #if BOTH(ADAPTIVE_FAN_SLOWING, PIDTEMP)
     #define NO_FAN_SLOWING_IN_PID_TUNING    // Don't slow fan speed during M303
   #endif
@@ -341,9 +341,9 @@
   #endif
   #define DOUBLECLICK_FOR_Z_BABYSTEPPING
   #define DOUBLECLICK_MAX_INTERVAL 2000
-  
+
   //#define MOVE_Z_WHEN_IDLE              // Jump to the move Z menu on doubleclick when printer is idle.
-  
+
   #if ENABLED(MOVE_Z_WHEN_IDLE)
     #define MOVE_Z_IDLE_MULTIPLICATOR 1   // Multiply 1mm by this factor for the move step size.
   #endif
@@ -351,7 +351,7 @@
   #if ENABLED(EZABL_ENABLE)
     #define BABYSTEP_ZPROBE_OFFSET
   #endif
-  
+
   #if ENABLED(BABYSTEP_ZPROBE_OFFSET)
     #define BABYSTEP_ZPROBE_GFX_OVERLAY   // Enable graphical overlay on Z-offset editor
   #endif
@@ -385,30 +385,44 @@
 #define ADVANCED_PAUSE_FEATURE
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   #define PAUSE_PARK_RETRACT_FEEDRATE         60
-  #define PAUSE_PARK_RETRACT_LENGTH            2 
+  #define PAUSE_PARK_RETRACT_LENGTH            2
   #define FILAMENT_CHANGE_UNLOAD_FEEDRATE     10
-  #define FILAMENT_CHANGE_UNLOAD_ACCEL        25 
+  #define FILAMENT_CHANGE_UNLOAD_ACCEL        25
   #if ENABLED(DIRECT_DRIVE_PRINTER)
-    #define FILAMENT_CHANGE_UNLOAD_LENGTH      20  
+    #define FILAMENT_CHANGE_UNLOAD_LENGTH      20
   #else
     #define FILAMENT_CHANGE_UNLOAD_LENGTH      100
   #endif
   #define FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE   6
   #define FILAMENT_CHANGE_SLOW_LOAD_LENGTH     0
   #define FILAMENT_CHANGE_FAST_LOAD_FEEDRATE   6
-  #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     25 
+  #define FILAMENT_CHANGE_FAST_LOAD_ACCEL     25
   #define FILAMENT_CHANGE_FAST_LOAD_LENGTH     0
   #define ADVANCED_PAUSE_PURGE_FEEDRATE        3
   #define ADVANCED_PAUSE_PURGE_LENGTH         50
   #define ADVANCED_PAUSE_RESUME_PRIME          0
-  #define FILAMENT_UNLOAD_RETRACT_LENGTH      13 
+  #define FILAMENT_UNLOAD_RETRACT_LENGTH      13
   #define FILAMENT_UNLOAD_DELAY             5000
-  #define FILAMENT_UNLOAD_PURGE_LENGTH         8 
+  #define FILAMENT_UNLOAD_PURGE_LENGTH         8
   #define PAUSE_PARK_NOZZLE_TIMEOUT           60
   #define FILAMENT_CHANGE_ALERT_BEEPS         10
   #define PAUSE_PARK_NO_STEPPER_TIMEOUT
   #define PARK_HEAD_ON_PAUSE
 #endif
+
+#define  X_SLAVE_ADDRESS 0
+#define  Y_SLAVE_ADDRESS 0
+#define  Z_SLAVE_ADDRESS 0
+#define X2_SLAVE_ADDRESS 0
+#define Y2_SLAVE_ADDRESS 0
+#define Z2_SLAVE_ADDRESS 0
+#define Z3_SLAVE_ADDRESS 0
+#define E0_SLAVE_ADDRESS 0
+#define E1_SLAVE_ADDRESS 0
+#define E2_SLAVE_ADDRESS 0
+#define E3_SLAVE_ADDRESS 0
+#define E4_SLAVE_ADDRESS 0
+#define E5_SLAVE_ADDRESS 0
 
 #if HAS_TRINAMIC
 
@@ -496,7 +510,7 @@
     #define E5_MICROSTEPS  16
     #define E5_RSENSE    0.11
   #endif
-  
+
   #define STEALTHCHOP_XY
   #define STEALTHCHOP_Z
 

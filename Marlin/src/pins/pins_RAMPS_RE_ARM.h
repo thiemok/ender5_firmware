@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,6 +106,35 @@
   #define TMC_SW_SCK       P1_09   // ETH
 #endif
 
+#if HAS_DRIVER(TMC2208) || HAS_DRIVER(TMC2209)
+  /**
+   * TMC2208/TMC2209 stepper drivers
+   *
+   * Hardware serial communication ports.
+   * If undefined software serial is used according to the pins below
+   */
+
+  /**
+   * Software serial
+   */
+
+   // P2_08 E1-Step
+   // P2_13 E1-Dir
+
+  #define X_SERIAL_TX_PIN    P2_13
+  #define X_SERIAL_RX_PIN    P2_13
+
+  #define Y_SERIAL_TX_PIN    P0_00
+  #define Y_SERIAL_RX_PIN    P0_00
+
+  #define Z_SERIAL_TX_PIN    P0_01
+  #define Z_SERIAL_RX_PIN    P0_01
+
+  #define E0_SERIAL_TX_PIN   P2_08
+  #define E0_SERIAL_RX_PIN   P2_08
+
+#endif
+
 //
 // Temperature Sensors
 //  3.3V max when defined as an analog input
@@ -200,7 +229,7 @@
   #define MAX6675_SS_PIN   P1_28
 #endif
 
-#if ENABLED(CASE_LIGHT_ENABLE) && !PIN_EXISTS(CASE_LIGHT) && !defined(SPINDLE_LASER_ENABLE_PIN)
+#if ENABLED(CASE_LIGHT_ENABLE) && !PIN_EXISTS(CASE_LIGHT) && !defined(SPINDLE_LASER_ENA_PIN)
   #if !defined(NUM_SERVOS) || NUM_SERVOS < 4   // Try to use servo connector
     #define CASE_LIGHT_PIN P1_18   // (4) MUST BE HARDWARE PWM
   #endif
@@ -210,11 +239,15 @@
 // M3/M4/M5 - Spindle/Laser Control
 //            Use servo pins, if available
 //
-#if ENABLED(SPINDLE_LASER_ENABLE) && !PIN_EXISTS(SPINDLE_LASER_ENABLE)
+#if HAS_CUTTER && !PIN_EXISTS(SPINDLE_LASER_ENA)
   #if NUM_SERVOS > 1
-    #error "SPINDLE_LASER_ENABLE requires 3 free servo pins."
+    #if ENABLED(SPINDLE_FEATURE)
+      #error "SPINDLE_FEATURE requires 3 free servo pins."
+    #else
+      #error "LASER_FEATURE requires 3 free servo pins."
+    #endif
   #endif
-  #define SPINDLE_LASER_ENABLE_PIN SERVO1_PIN   // (6) Pin should have a pullup/pulldown!
+  #define SPINDLE_LASER_ENA_PIN    SERVO1_PIN   // (6) Pin should have a pullup/pulldown!
   #define SPINDLE_LASER_PWM_PIN    SERVO3_PIN   // (4) MUST BE HARDWARE PWM
   #define SPINDLE_DIR_PIN          SERVO2_PIN   // (5)
 #endif
@@ -267,13 +300,23 @@
   #define LCD_PINS_ENABLE  P0_18   // J3-10 & AUX-3 (SID, MOSI)
   #define LCD_PINS_D4      P2_06   // J3-8 & AUX-3 (SCK, CLK)
 
-#elif ENABLED(ULTRA_LCD)
+#elif HAS_SPI_LCD
 
-  #define BEEPER_PIN       P1_30   // (37) not 5V tolerant
+  //#define SCK_PIN        P0_15   // (52)  system defined J3-9 & AUX-3
+  //#define MISO_PIN       P0_17   // (50)  system defined J3-10 & AUX-3
+  //#define MOSI_PIN       P0_18   // (51)  system defined J3-10 & AUX-3
+  //#define SS_PIN         P1_23   // (53)  system defined J3-5 & AUX-3 (Sometimes called SDSS)
+
+  #if ENABLED(FYSETC_MINI_12864)
+    #define BEEPER_PIN     P1_01
+    #define BTN_ENC        P1_04
+  #else
+    #define BEEPER_PIN     P1_30   // (37) not 5V tolerant
+    #define BTN_ENC        P2_11   // (35) J3-3 & AUX-4
+  #endif
 
   #define BTN_EN1          P3_26   // (31) J3-2 & AUX-4
   #define BTN_EN2          P3_25   // (33) J3-4 & AUX-4
-  #define BTN_ENC          P2_11   // (35) J3-3 & AUX-4
 
   #define SD_DETECT_PIN    P1_31   // (49) J3-1 & AUX-3 (NOT 5V tolerant)
   #define KILL_PIN         P1_22   // (41) J5-4 & AUX-4
@@ -296,13 +339,6 @@
   #if ANY(VIKI2, miniVIKI)
     // #define LCD_SCREEN_ROT_180
 
-    #define BTN_EN1        P3_26   // (31) J3-2 & AUX-4
-    #define BTN_EN2        P3_25   // (33) J3-4 & AUX-4
-    #define BTN_ENC        P2_11   // (35) J3-3 & AUX-4
-
-    #define SD_DETECT_PIN  P1_31   // (49) J3-1 & AUX-3 (NOT 5V tolerant)
-    #define KILL_PIN       P1_22   // (41) J5-4 & AUX-4
-
     #define DOGLCD_CS      P0_16   // (16)
     #define DOGLCD_A0      P2_06   // (59) J3-8 & AUX-2
     #define DOGLCD_SCK     SCK_PIN
@@ -311,8 +347,37 @@
     #define STAT_LED_BLUE_PIN P0_26 //(63)  may change if cable changes
     #define STAT_LED_RED_PIN P1_21 // ( 6)  may change if cable changes
   #else
-    #define DOGLCD_CS      P0_26   // (63) J5-3 & AUX-2
-    #define DOGLCD_A0      P2_06   // (59) J3-8 & AUX-2
+
+    #if ENABLED(FYSETC_MINI_12864)
+      #define DOGLCD_SCK   P0_15
+      #define DOGLCD_MOSI  P0_18
+
+      // EXP1 on LCD adapter is not usable - using Ethernet connector instead
+      #define DOGLCD_CS    P1_09
+      #define DOGLCD_A0    P1_14
+      //#define FORCE_SOFT_SPI    // Use this if default of hardware SPI causes display problems
+                                  //   results in LCD soft SPI mode 3, SD soft SPI mode 0
+
+      #define LCD_RESET_PIN  P0_16   // Must be high or open for LCD to operate normally.
+
+      #if EITHER(FYSETC_MINI_12864_1_2, FYSETC_MINI_12864_2_0)
+        #ifndef RGB_LED_R_PIN
+          #define RGB_LED_R_PIN P1_00
+        #endif
+        #ifndef RGB_LED_G_PIN
+          #define RGB_LED_G_PIN P1_01
+        #endif
+        #ifndef RGB_LED_B_PIN
+          #define RGB_LED_B_PIN P1_08
+        #endif
+      #elif ENABLED(FYSETC_MINI_12864_2_1)
+        #define NEOPIXEL_PIN    P1_00
+      #endif
+    #else
+      #define DOGLCD_CS    P0_26   // (63) J5-3 & AUX-2
+      #define DOGLCD_A0    P2_06   // (59) J3-8 & AUX-2
+    #endif
+
     #define LCD_BACKLIGHT_PIN P0_16 //(16) J3-7 & AUX-4 - only used on DOGLCD controllers
     #define LCD_PINS_ENABLE P0_18  // (51) (MOSI) J3-10 & AUX-3
     #define LCD_PINS_D4    P0_15   // (52) (SCK)  J3-9 & AUX-3
@@ -323,11 +388,6 @@
     #endif
   #endif
 
-  //#define MISO_PIN         P0_17   // (50)  system defined J3-10 & AUX-3
-  //#define MOSI_PIN         P0_18   // (51)  system defined J3-10 & AUX-3
-  //#define SCK_PIN          P0_15   // (52)  system defined J3-9 & AUX-3
-  //#define SS_PIN           P1_23   // (53)  system defined J3-5 & AUX-3 (Sometimes called SDSS)
-
   #if ENABLED(MINIPANEL)
     // GLCD features
     // Uncomment screen orientation
@@ -336,7 +396,7 @@
     //#define LCD_SCREEN_ROT_270
   #endif
 
-#endif // ULTRA_LCD
+#endif // HAS_SPI_LCD
 
 //
 // Ethernet pins
@@ -354,35 +414,28 @@
 #define ENET_TXD0          P1_00   // (78)  J12-11
 #define ENET_TXD1          P1_01   // (79)  J12-12
 
-//#define USB_SD_DISABLED
-#define USB_SD_ONBOARD        // Provide the onboard SD card to the host as a USB mass storage device
+//
+// SD Support
+//
+#ifndef SDCARD_CONNECTION
+  #define SDCARD_CONNECTION ONBOARD
+#endif
 
-//#define LPC_SD_LCD          // Marlin uses the SD drive attached to the LCD
-#define LPC_SD_ONBOARD        // Marlin uses the SD drive on the control board
+#define ONBOARD_SD_CS_PIN  P0_06   // Chip select for "System" SD card
 
-#if ENABLED(LPC_SD_LCD)
-
-  #define SCK_PIN          P0_15
-  #define MISO_PIN         P0_17
-  #define MOSI_PIN         P0_18
-  #define SS_PIN           P1_23   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS    P0_06   // Chip select for "System" SD card
-
-#elif ENABLED(LPC_SD_ONBOARD)
-
-  #if ENABLED(USB_SD_ONBOARD)
-    // When sharing the SD card with a PC we want the menu options to
-    // mount/unmount the card and refresh it. So we disable card detect.
-    #define SHARED_SD_CARD
-    #undef SD_DETECT_PIN // there is also no detect pin for the onboard card
-  #endif
-
+#if SD_CONNECTION_IS(LCD)
+  #define SCK_PIN          P0_15   // (52)  system defined J3-9 & AUX-3
+  #define MISO_PIN         P0_17   // (50)  system defined J3-10 & AUX-3
+  #define MOSI_PIN         P0_18   // (51)  system defined J3-10 & AUX-3
+  #define SS_PIN           P1_23   // (53)  system defined J3-5 & AUX-3 (Sometimes called SDSS) - CS used by Marlin
+#elif SD_CONNECTION_IS(ONBOARD)
+  #undef SD_DETECT_PIN
   #define SCK_PIN          P0_07
   #define MISO_PIN         P0_08
   #define MOSI_PIN         P0_09
-  #define SS_PIN           P0_06   // Chip select for SD card used by Marlin
-  #define ONBOARD_SD_CS    P0_06   // Chip select for "System" SD card
-
+  #define SS_PIN           ONBOARD_SD_CS_PIN
+#elif SD_CONNECTION_IS(CUSTOM_CABLE)
+  #error "No custom SD drive cable defined for this board."
 #endif
 
 /**

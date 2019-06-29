@@ -1,9 +1,9 @@
 /**
  * Marlin 3D Printer Firmware
- * Copyright (C) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
+ * Copyright (c) 2019 MarlinFirmware [https://github.com/MarlinFirmware/Marlin]
  *
  * Based on Sprinter and grbl.
- * Copyright (C) 2011 Camiel Gubbels / Erik van der Zalm
+ * Copyright (c) 2011 Camiel Gubbels / Erik van der Zalm
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -263,7 +263,7 @@ void InvadersGame::game_screen() {
   if (ui.first_page) {
 
     // Update Cannon Position
-    int32_t ep = (int32_t)ui.encoderPosition;
+    int16_t ep = int16_t(ui.encoderPosition);
     ep = constrain(ep, 0, (LCD_PIXEL_WIDTH - (CANNON_W)) / (CANNON_VEL));
     ui.encoderPosition = ep;
 
@@ -302,7 +302,7 @@ void InvadersGame::game_screen() {
         if (invader_count && !random(0, 20)) {
 
           // Find a free bullet
-          laser_t *b = NULL;
+          laser_t *b = nullptr;
           LOOP_L_N(i, COUNT(bullet)) if (!bullet[i].v) { b = &bullet[i]; break; }
           if (b) {
             // Pick a random shooter and update the bullet
