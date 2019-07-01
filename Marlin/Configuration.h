@@ -3,11 +3,6 @@
 *
 * Uncomment means removing the 2 // in front of #define.
 *
-* FLASHING NOTES:
-* ALL slicers (Simplify3D, Cura, Slic3r, etc) or anything else that connects to the COM port must be CLOSED for the firmware to be flash.
-* If anything is connected to the COM port when flashing it will fail, typically "access denied" is listed in the error section of the Arduino IDE.
-* You MUST use the Included Arduino IDE to flash the firmware if on Windows and if you are on a Mac or Linux follow the guide in our knowledgebase to setup your IDE to work with the firmware.
-*
 * EZABL SETUP NOTES:
 * If you have EZABL uncomment the mount you are using with the printer.
 * If you have a custom/unsupported mount uncomment #define CUSTOM_MOUNT and enter your offsets
@@ -18,33 +13,16 @@
 * Read the printer title for the model you are flashing, it will show what board to select.
 *
 * STEP 2:
-* Uncomment the printer you want to flash. The printers are sorted A-Z by brand name.
+* Uncomment the printer you want to flash and any options you want to use. The printers are sorted A-Z by brand name.
+* Save the file before moving to the next step.
 *
-* STEP 3 *** FOR 8 BIT BOARDS ONLY ***:
-* Select the COM port your printer is on from the Tools menu. If you do not see the COM port try
-* downloading the latest drivers from the manufacturer or TH3D site on our knowledgebase.
-*
-* STEP 4:
-* Verify you have the correct board selected, printer model uncommented, and if you are using EZOUT and/or EZABL
-* the lines you need to use them are also uncommented.
-*
-* STEP 5:
-* 8-Bit Boards:
-* Once you have your settings verified click the arrow in the upper left to upload to the board.
-*
-* 32-Bit Printers:
+* STEP 3:
 * Select Auto Build > PIO Build to build the firmware. Copy the Firmware.bin file from the ".pioenvs/CPU FOLDER" to your SD card.
 * Put the SD card into the printer with the power OFF. Turn on the printer, it will take a little longer to boot as it is flashing the firmware.
 *
-* STEP 6:
+* STEP 4:
 * Reset your eeprom. You can send M502 then M500 to reset the EEPROM OR on the printer LCD go to
 * Control > Reset EEPROM to clear out the EEPROM to defaults.
-*
-* BOOTLOADER FLASHING NOTES:
-* For flashing your bootloader with an Uno make sure to select Arduino as ISP for the programmer
-*
-* There are other features in the TH3D Extras section so look there for V6 Hotend,
-* Bootscreen settings, Titan Extruder and more. You only need to edit this file.
 *
 * ERROR NOTES:
 * If you get errors flashing READ the message it gives you and double check that you selected
@@ -348,4 +326,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.4"
+#define UNIFIED_VERSION "TH3D U2.R1.4a"
