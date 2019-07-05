@@ -34,6 +34,7 @@
 //
 // Servos
 //
+
 #define SERVO0_PIN      P2_04
 
 #define FIL_RUNOUT_PIN  P1_27
@@ -41,6 +42,7 @@
 //
 // Limit Switches
 //
+
 #define X_STOP_PIN         P1_24
 #define Y_STOP_PIN         P1_25
 #define Z_STOP_PIN         P1_26
@@ -48,6 +50,7 @@
 //
 // Steppers
 //
+
 #define X_STEP_PIN          P2_00
 #define X_DIR_PIN           P1_16
 #define X_ENABLE_PIN        P1_17
@@ -88,9 +91,10 @@
 
 #endif
 
-// Analog Inputs
-//  3.3V max when defined as an analog input
 //
+// Analog Inputs
+//
+
 #if ENABLED(EZBOARD_PT100)
   #define TEMP_0_PIN        7
 #else
@@ -117,6 +121,7 @@
 //
 // Auto fans
 //
+
 #define AUTO_FAN_PIN      P1_22   // FET 3
 
 #define ORIG_E0_AUTO_FAN_PIN  AUTO_FAN_PIN
@@ -124,18 +129,8 @@
 #define ORIG_E2_AUTO_FAN_PIN  AUTO_FAN_PIN
 
 //
-// LCD / Controller
-//
-// LCD_PINS_D5, D6, and D7 are not present in the EXP1 connector, and will need to be
-// defined to use the REPRAP_DISCOUNT_SMART_CONTROLLER.
-//
-// A remote SD card is currently not supported because the pins routed to the EXP2
-// connector are shared with the onboard SD card, and Marlin does not support reading
-// G-code files from the onboard SD card.
-//
-
-//
 // Display
+//
 
 #if ENABLED(CR10_STOCKDISPLAY)
   #define BEEPER_PIN        P1_31
