@@ -1,10 +1,3 @@
-#include <avr/pgmspace.h>
-/**
- * Made with Marlin Bitmap Converter
- * http://marlinfw.org/tools/u8glib/converter.html
- *
- * This bitmap from the file 'ez300boot.png'
- */
 #define CUSTOM_BOOTSCREEN_BMPWIDTH  128
 #define CUSTOM_BOOTSCREEN_BMPHEIGHT 64
 #define CUSTOM_BOOTSCREEN_TIMEOUT   1500

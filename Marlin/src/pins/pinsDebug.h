@@ -17,6 +17,8 @@
  *
  */
 
+#include "../inc/MarlinConfig.h"
+
 #define MAX_NAME_LENGTH  39    // one place to specify the format of all the sources of names
                                // "-" left justify, "39" minimum width of name, pad with blanks
 
@@ -40,7 +42,7 @@
 #define REPORT_NAME_ANALOG(COUNTER, NAME) _ADD_PIN(#NAME, COUNTER)
 
 #include "pinsDebug_list.h"
-#line 47
+#line 46
 
 // manually add pins that have names that are macros which don't play well with these macros
 #if SERIAL_PORT == 0 && (AVR_ATmega2560_FAMILY || AVR_ATmega1284_FAMILY || defined(ARDUINO_ARCH_SAM))
@@ -92,10 +94,9 @@ const PinInfo pin_array[] PROGMEM = {
   #endif
 
   #include "pinsDebug_list.h"
-  #line 99
+  #line 98
 
 };
-
 
 #include HAL_PATH(../HAL, pinsDebug.h)  // get the correct support file for this CPU
 
@@ -116,7 +117,7 @@ inline void report_pin_state_extended(pin_t pin, bool ignore, bool extended = fa
     if (GET_ARRAY_PIN(x) == pin) {
       if (found) multi_name_pin = true;
       found = true;
-      if (!multi_name_pin) {    // report digitial and analog pin number only on the first time through
+      if (!multi_name_pin) {    // report digital and analog pin number only on the first time through
         sprintf_P(buffer, PSTR("%sPIN: "), start_string);     // digital pin number
         SERIAL_ECHO(buffer);
         PRINT_PIN(pin);

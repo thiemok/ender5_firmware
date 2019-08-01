@@ -39,6 +39,8 @@
 
 #include <pins_arduino.h>
 
+#include "../../inc/MarlinConfigPre.h"
+
 /**
  * Utility functions
  */
@@ -75,7 +77,7 @@
 
 #if MB(PRINTRBOARD_G2)
 
-  #include "G2_pins.h"
+  #include "fastio/G2_pins.h"
 
   // Set pin as input
   #define _SET_INPUT(IO) do{ \

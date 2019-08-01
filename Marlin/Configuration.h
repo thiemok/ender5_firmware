@@ -121,16 +121,6 @@
 // DO NOTE: Most machines will work with the fast probe enabled. Use M48 to verify accuracy.
 #define EZABL_FASTPROBE
 
-// This will disable the XYE motors during probing. Can be useful if you have stepper motors causing interference issues with the EZABL sensor.
-//#define PROBING_MOTORS_OFF
-
-// Heaters will stay on during probing - only use if directed to by support. Do not use on AC beds.
-//#define HEATERS_ON_DURING_PROBING
-
-// Letting the bed heat recover between probes can increase accuracy due to the bed warping during cooling/heating
-// Enabling the below option will let the bed get back to temperature during probing but will increase probing times.
-//#define WAIT_FOR_BED_HEATER
-
 // If you want a more granular control over the babystepping uncomment the below line.
 // This will make the adjustment finer than the standard setting.
 //#define FINE_BABYSTEPPING
@@ -184,12 +174,6 @@
 //#define TITAN_EXTRUDER
 #define TITAN_EXTRUDER_STEPS 463
 
-// DUAL HOTEND SETTINGS ----------------------------
-
-// This is the distance between each nozzle tip when using a dual hotend like the TH3D Tough Dual Hotend or the E3D Chimera or Dual hotends.
-// This setting only applies to printers using a dual extruder board.
-#define DUAL_HOTEND_X_DISTANCE 18.0
-
 // THERMISTOR SETTINGS -----------------------------
 
 // If you are using an E3D V6 Hotend with their cartridge thermistor (not glass version) uncomment the below line.
@@ -240,17 +224,6 @@
 // If your printer is homing to the endstops hard uncomment this to change the homing speed/divisor to make it less aggressive.
 //#define SLOWER_HOMING
 
-// BOOT SCREEN OPTIONS -----------------------------
-
-// Use TinyMachines Bootscreen instead of TH3D
-//#define TM3D_BOOT
-
-// Use Ender Bootscreeen instead of TH3D
-//#define ENDER_BOOT
-
-// Disable Bootscreen completely
-//#define DISABLE_BOOT
-
 //===========================================================================
 //****************** COMMUNITY REQUESTED FEATURES ***************************
 //===========================================================================
@@ -278,10 +251,8 @@
 // and then enter your probe offsets in the CUSTOM_PROBE section above. The Pin 27 boards on eBay are clones of our original EZOut. If you want to
 // support the people that originally came up with the board you can get our EZOut breakout board here: http://EZOut.TH3DStudio.com
 // Sales from our shop allow us to allocate time for community firmware development at no charge to you. <3
-// If you have a V3 BL Touch also uncomment the BLTOUCH_V3 line to fix issues with the new V3 probe.
 //
 //#define BLTOUCH
-//#define BLTOUCH_V3
 // Here is where you set your servo pin. EZOut Servo Pin Numbers: Ender3/5/CR-10 - 27, Ender 2 - 29. For 2560 boards look for the pin you connected the servo wire to and enter below. For EZBoard use P2_04
 //#define SERVO0_PIN P2_04
 //
