@@ -65,6 +65,7 @@ void GcodeSuite::M48() {
 
   if (verbose_level > 0)
     SERIAL_ECHOLNPGM("M48 Z-Probe Repeatability Test");
+    ui.set_status("M48 Test Running...");
 
   const int8_t n_samples = parser.byteval('P', 10);
   if (!WITHIN(n_samples, 4, 50)) {

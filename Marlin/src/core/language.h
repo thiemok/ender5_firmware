@@ -135,6 +135,9 @@
 // Common LCD messages
 
   /* nothing here yet */
+  
+// TH3D Custom
+#define MSG_M48_TEST                        "Run M48 Test"
 
 // Common serial messages
 #define MSG_MARLIN "Marlin"

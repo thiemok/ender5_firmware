@@ -465,6 +465,10 @@ void menu_motion() {
     MENU_ITEM(gcode, MSG_AUTO_HOME_Y, PSTR("G28 Y"));
     MENU_ITEM(gcode, MSG_AUTO_HOME_Z, PSTR("G28 Z"));
   #endif
+  
+  #if ENABLED(EZABL_ENABLE)
+    MENU_ITEM(gcode, MSG_M48_TEST, PSTR("G28\nM48 P10"));
+  #endif
 
   //
   // Auto Z-Align
