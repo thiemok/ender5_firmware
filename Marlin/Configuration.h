@@ -124,6 +124,13 @@
 // This will disable the XYE motors during probing. Can be useful if you have stepper motors causing interference issues with the EZABL sensor.
 //#define PROBING_MOTORS_OFF
 
+// Heaters will stay on during probing - only use if directed to by support. Do not use on AC beds.
+//#define HEATERS_ON_DURING_PROBING
+
+// Letting the bed heat recover between probes can increase accuracy due to the bed warping during cooling/heating
+// Enabling the below option will let the bed get back to temperature during probing but will increase probing times.
+//#define WAIT_FOR_BED_HEATER
+
 // If you want a more granular control over the babystepping uncomment the below line.
 // This will make the adjustment finer than the standard setting.
 //#define FINE_BABYSTEPPING
