@@ -131,6 +131,9 @@
 // Does your machine make weird noises/vibrations when it is probing the mesh? Enable this to slow down the speed between probe points.
 //#define SLOWER_PROBE_MOVES
 
+// If you do not want to have the Zoffset combined with babystepping then uncomment the below line.
+//#define SEPARATE_BABYSTEPPING_FROM_ZOFFSET
+
 //================================================================================
 // IF YOU HAVE A CUSTOM PROBE MOUNT OR ONE THAT IS NOT PRE-SUPPORTED UNCOMMENT THE
 // CUSTOM_PROBE OPTION IN YOUR PRINTER SECTION AND ENTER YOUR PROBE LOCATION BELOW
