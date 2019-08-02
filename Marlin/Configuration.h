@@ -121,6 +121,9 @@
 // DO NOTE: Most machines will work with the fast probe enabled. Use M48 to verify accuracy.
 #define EZABL_FASTPROBE
 
+// This will disable the XYE motors during probing. Can be useful if you have stepper motors causing interference issues with the EZABL sensor.
+//#define PROBING_MOTORS_OFF
+
 // If you want a more granular control over the babystepping uncomment the below line.
 // This will make the adjustment finer than the standard setting.
 //#define FINE_BABYSTEPPING

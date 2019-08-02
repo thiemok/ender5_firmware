@@ -314,6 +314,11 @@ float zprobe_zoffset; // Initialized by settings.load()
     #if ENABLED(PROBING_HEATERS_OFF)
       thermalManager.pause(p);
     #endif
+    #if ENABLED(PROBING_MOTORS_OFF)
+        disable_e_steppers();
+        disable_Y();
+        disable_X();
+    #endif
     #if ENABLED(PROBING_FANS_OFF)
       thermalManager.set_fans_paused(p);
     #endif
