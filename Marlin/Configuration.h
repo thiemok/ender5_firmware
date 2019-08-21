@@ -121,6 +121,10 @@
 // DO NOTE: Most machines will work with the fast probe enabled. Use M48 to verify accuracy.
 #define EZABL_FASTPROBE
 
+// Super fast probing - VERY EXPERIMENTAL AND ONLY TESTED WITH EZABL PRO SENSORS
+// Do NOT use with EZABL_FASTPROBE (comment out above) or BL Touch Sensors
+//#define EZABL_SUPERFASTPROBE
+
 // This will disable the XYE motors during probing. Can be useful if you have stepper motors causing interference issues with the EZABL sensor.
 //#define PROBING_MOTORS_OFF
 
@@ -310,4 +314,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.6"
+#define UNIFIED_VERSION "TH3D U2.R1.7"

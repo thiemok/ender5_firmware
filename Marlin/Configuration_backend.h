@@ -53,6 +53,8 @@
 
   #define CR10_STOCKDISPLAY
 
+  #define SQUARE_WAVE_STEPPING
+
   #define X_MIN_ENDSTOP_INVERTING false
   #define Y_MIN_ENDSTOP_INVERTING false
   #define Z_MIN_ENDSTOP_INVERTING false
@@ -71,7 +73,7 @@
 	#endif
   #endif
 
-  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 15, 50 }
+  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 30, 50 }
   #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500
@@ -352,7 +354,9 @@
 
 #define VALIDATE_HOMING_ENDSTOPS
 
-#if DISABLED(EZABL_FASTPROBE)
+#if ENABLED(EZABL_SUPERFASTPROBE)
+  #define HOMING_FEEDRATE_Z  (30*60)
+#elif DISABLED(EZABL_FASTPROBE)
   #define HOMING_FEEDRATE_Z  (4*60)
 #else
   #define HOMING_FEEDRATE_Z  (8*60)
@@ -373,7 +377,11 @@
     #if ENABLED(SLOWER_PROBE_MOVES) || ENABLED(TH3D_EZ300)
       #define XY_PROBE_SPEED 8000
     #else
-      #define XY_PROBE_SPEED 12000
+      #if ENABLED(EZABL_SUPERFASTPROBE)
+        #define XY_PROBE_SPEED 16000
+      #else
+        #define XY_PROBE_SPEED 12000
+      #endif
     #endif
   #endif
 
@@ -384,12 +392,20 @@
     #define PROBING_HEATERS_OFF
   #endif
 
-  #define MULTIPLE_PROBING 2
+  #if ENABLED(EZABL_SUPERFASTPROBE)
+    #define MULTIPLE_PROBING 3
+  #else
+    #define MULTIPLE_PROBING 2
+  #endif
 
   #if ENABLED(BLTOUCH)
     #define Z_CLEARANCE_DEPLOY_PROBE   15
     #define Z_CLEARANCE_BETWEEN_PROBES 10
 	#define Z_CLEARANCE_MULTI_PROBE    10
+  #elif ENABLED(EZABL_SUPERFASTPROBE)
+    #define Z_CLEARANCE_DEPLOY_PROBE   1
+    #define Z_CLEARANCE_BETWEEN_PROBES 2
+    #define Z_CLEARANCE_MULTI_PROBE    1
   #else
     #define Z_CLEARANCE_DEPLOY_PROBE   5
     #define Z_CLEARANCE_BETWEEN_PROBES 3
