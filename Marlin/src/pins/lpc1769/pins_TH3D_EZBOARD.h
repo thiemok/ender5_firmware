@@ -93,7 +93,11 @@
 // Temp Sensors
 //  3.3V max when defined as an Analog Input!
 //
-#define TEMP_0_PIN          0   // Analog Input P0_23
+#if ENABLED(EZBOARD_PT100)
+  #define TEMP_0_PIN        7
+#else
+  #define TEMP_0_PIN        0   // Analog Input P0_23
+#endif
 #define TEMP_BED_PIN        1   // Analog Input P0_24
 #define TEMP_1_PIN          2   // Analog Input P0_25
 #if ENABLED(FILAMENT_WIDTH_SENSOR)
