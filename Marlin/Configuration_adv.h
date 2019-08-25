@@ -525,8 +525,11 @@
    * Define you own with
    * { <off_time[1..15]>, <hysteresis_end[-3..12]>, hysteresis_start[1..8] }
    */
-  #define CHOPPER_TIMING CHOPPER_DEFAULT_24V
-
+  #if ENABLED(PRINTER_VOLTAGE_12)
+    #define CHOPPER_TIMING CHOPPER_DEFAULT_12V
+  #else
+    #define CHOPPER_TIMING CHOPPER_DEFAULT_24V
+  #endif
   #define MONITOR_DRIVER_STATUS
 
   #if ENABLED(MONITOR_DRIVER_STATUS)
