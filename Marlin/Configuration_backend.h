@@ -134,36 +134,42 @@
     #define X_BED_SIZE 300
     #define Y_BED_SIZE 300
     #define Z_MAX_POS 400
+    #define PRINTER_VOLTAGE_12
   #endif
 
   #if ENABLED(CR10_MINI)
     #define X_BED_SIZE 300
     #define Y_BED_SIZE 220
     #define Z_MAX_POS 300
+    #define PRINTER_VOLTAGE_12
   #endif
 
   #if ENABLED(CR10_S4)
     #define X_BED_SIZE 400
     #define Y_BED_SIZE 400
     #define Z_MAX_POS 400
+    #define PRINTER_VOLTAGE_12
   #endif
 
   #if ENABLED(CR10_S5)
     #define X_BED_SIZE 500
     #define Y_BED_SIZE 500
     #define Z_MAX_POS 500
+    #define PRINTER_VOLTAGE_12
   #endif
 
   #if ENABLED(ENDER3)
     #define X_BED_SIZE 235
     #define Y_BED_SIZE 235
     #define Z_MAX_POS 250
+    #define PRINTER_VOLTAGE_24
   #endif
 
   #if ENABLED(ENDER5)
     #define X_BED_SIZE 220
     #define Y_BED_SIZE 220
     #define Z_MAX_POS 300
+    #define PRINTER_VOLTAGE_24
   #endif
 
   #if ENABLED(HOME_ADJUST)
