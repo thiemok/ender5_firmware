@@ -28,6 +28,46 @@
  */
 
 /**
+ * ID10T Errors
+ */
+ 
+#if ENABLED(CUSTOM_ESTEPS) && ENABLED(TITAN_EXTRUDER)
+  #error "Only use one extruder option at a time. Titan option will reverse the motor, custom esteps will not. Use the TITAN_EXTRUDER_STEPS to set step when using an extruder that needs reverse direction."
+#endif
+
+#if ENABLED(MANUAL_MESH_LEVELING) && (ENABLED(BLTOUCH) || ENABLED(EZABL_ENABLE))
+  #error "Manual Mesh Leveling is only available without a probe. Disable manual mesh or the probe options if you don't have a probe."
+#endif
+
+#if ENABLED(CR10S_STOCKFILAMENTSENSOR) && ENABLED(EZOUTV2_ENABLE)
+  #error "Only uncomment one type of filament sensor."
+#endif
+
+#if ENABLED(V6_HOTEND) && ENABLED(TH3D_HOTEND_THERMISTOR)
+  #error "Only uncomment ONE type of hotend thermistor option."
+#endif
+
+#if ENABLED(V6_HOTEND) && ENABLED(KNOWN_HOTEND_THERMISTOR)
+  #error "Only uncomment ONE type of hotend thermistor option."
+#endif
+
+#if ENABLED(TH3D_HOTEND_THERMISTOR) && ENABLED(KNOWN_HOTEND_THERMISTOR)
+  #error "Only uncomment ONE type of hotend thermistor option."
+#endif
+
+#if ENABLED(TH3D_BED_THERMISTOR) && ENABLED(KNOWN_BED_THERMISTOR)
+  #error "Only uncomment ONE type of bed thermistor option."
+#endif
+
+#if ENABLED(KEENOVO_TEMPSENSOR) && ENABLED(KNOWN_BED_THERMISTOR)
+  #error "Only uncomment ONE type of bed thermistor option."
+#endif
+
+#if ENABLED(KEENOVO_TEMPSENSOR) && ENABLED(TH3D_BED_THERMISTOR)
+  #error "Only uncomment ONE type of bed thermistor option."
+#endif
+
+/**
  * Require gcc 4.7 or newer (first included with Arduino 1.6.8) for C++11 features.
  */
 #if __cplusplus < 201103L
