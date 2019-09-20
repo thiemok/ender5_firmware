@@ -61,7 +61,7 @@
 // If you are using our EZOut Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header.
 //#define EZOUTV2_ENABLE
 
-// If you are using our Stock Creality CR-10S Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header.
+// If you are using the Stock Creality CR-10S Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header.
 //#define CR10S_STOCKFILAMENTSENSOR
 
 // EZABL Probe Mounts
@@ -314,4 +314,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.7a"
+#define UNIFIED_VERSION "TH3D U2.R1.8"

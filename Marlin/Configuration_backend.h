@@ -346,7 +346,8 @@
   #define USE_ZMIN_PLUG
 #endif
 
-#define ENDSTOPPULLUPS
+// Board has physical pullups. Disable CPU built in pullups.
+//#define ENDSTOPPULLUPS
 
 #define BUSY_WHILE_HEATING
 
@@ -534,7 +535,7 @@
   #define PROBE_MANUALLY
   #define LCD_BED_LEVELING
   #define MESH_BED_LEVELING
-  #define MBL_Z_STEP 0.025
+  #define MESH_EDIT_Z_STEP 0.025
   #define LCD_PROBE_Z_RANGE 4
   #define MESH_INSET 10
   #define GRID_MAX_POINTS_X 5
