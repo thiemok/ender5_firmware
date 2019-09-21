@@ -349,6 +349,11 @@
 // Board has physical pullups. Disable CPU built in pullups.
 //#define ENDSTOPPULLUPS
 
+#if ENABLED(V3_EZABL_ON_SERVO)
+  #define ENDSTOPPULLUP_ZMIN
+  #define ENDSTOPPULLUP_ZMIN_PROBE
+#endif
+
 #define BUSY_WHILE_HEATING
 
 #define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
