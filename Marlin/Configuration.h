@@ -8,25 +8,25 @@
 * If you have a custom/unsupported mount uncomment #define CUSTOM_MOUNT and enter your offsets
 * below in the CUSTOM MOUNT section. Refer to the EZABL guide to get your offsets.
 *
-* STEP 1 *** FOR 8 BIT BOARDS ONLY ***:
-* Select the correct board from the tools menu for the printer you are flashing.
-* Read the printer title for the model you are flashing, it will show what board to select.
-*
-* STEP 2:
+* STEP 1:
 * Uncomment the printer you want to flash and any options you want to use. The printers are sorted A-Z by brand name.
 * Save the file before moving to the next step.
 *
-* STEP 3:
-* Select Auto Build > PIO Build to build the firmware. Copy the Firmware.bin file from the ".pioenvs/CPU FOLDER" to your SD card.
+* STEP 2:
+* Select PlatformIO > Build to build the firmware. Copy the Firmware.bin file from the ".pioenvs/LPC1769" to your SD card.
 * Put the SD card into the printer with the power OFF. Turn on the printer, it will take a little longer to boot as it is flashing the firmware.
 *
-* STEP 4:
+* STEP 3:
 * Reset your eeprom. You can send M502 then M500 to reset the EEPROM OR on the printer LCD go to
 * Control > Reset EEPROM to clear out the EEPROM to defaults.
 *
 * ERROR NOTES:
-* If you get errors flashing READ the message it gives you and double check that you selected
-* the correct board from the Tools menu in Arduino. Turn off any AV systems and reboot the computer.
+* If you get errors flashing READ the message it gives you. Turn off any AV systems and reboot the computer.
+*
+* If you are having general compile issues please visit http://EZFirmware.TH3DStudio.com and use our web compile tool.
+* You can upload this file to our server and have it compile it for you. This is much easier and quicker than your local PC.
+*
+* If there is an option that has text make sure to keep the " marks around the text or the compile will fail.
 *
 * COMMUNITY REQUESTED FEATURES NOTE:
 * All features in the community requested features section are provided as-is with no support from TH3D.
