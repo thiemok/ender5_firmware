@@ -97,6 +97,11 @@
 // below line. However, if you get lost steps and inconsistent extrusion then disable this option.
 //#define STEALTHCHOP_E
 
+// If you are having issues with the EZABL not triggering when connected to the Z-Stop header you can use the
+// servo header pins. Connect the 2 wires going to the EZABL Board Z endstop side to the GND and SIG pins on the
+// servo header and uncomment the below line to switch the Z endstop over to that pin.
+//#define V3_EZABL_ON_SERVO
+
 //===========================================================================
 // *************************  END PRINTER SECTION   *************************
 //===========================================================================
