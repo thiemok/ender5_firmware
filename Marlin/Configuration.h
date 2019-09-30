@@ -266,25 +266,18 @@
 //#define LINEAR_ADVANCE
 // Change the K Value here or use M900 KX.XX in your starting code (recommended).
 #define LINEAR_ADVANCE_K 0
-// NOTE: If using linear advance along with EZABL on a printer with 1284p some Control > Motion menus will not be displayed due to space restrictions.
-// You can still change these via GCode commands.
 
 // BL TOUCH ----------------------------------------
 // If you want to use the BL-Touch install your EZOut Board, uncomment the 2 lines below, uncomment the CUSTOM_PROBE option in your printer section,
-// and then enter your probe offsets in the CUSTOM_PROBE section above. The Pin 27 boards on eBay are clones of our original EZOut. If you want to
-// support the people that originally came up with the board you can get our EZOut breakout board here: http://EZOut.TH3DStudio.com
-// Sales from our shop allow us to allocate time for community firmware development at no charge to you. <3
+// and then enter your probe offsets in the CUSTOM_PROBE section above. DO NOT USE A "PIN 27" or "EZOUT" board with the EZBOARD.
 //
 //#define BLTOUCH
-// Here is where you set your servo pin. EZOut Servo Pin Numbers: Ender3/5/CR-10 - 27, Ender 2 - 29. For 2560 boards look for the pin you connected the servo wire to and enter below. For EZBoard use P2_04
+// Here is where you set your servo pin. For EZBoard use P2_04
 //#define SERVO0_PIN P2_04
-//
-// NOTE: On 1284p boards due to space limitations and the large amount of code the BLTouch requires for the LCD Menus
-// the Bootscreen and some Control > Motion menus will not be displayed due to space restrictions
 
 // MANUAL MESH LEVELING ----------------------------
 // If you want to use manual mesh leveling you can enable the below option. This is for generating a MANUAL mesh WITHOUT a probe.
-// Mesh Bed Leveling Documentation: http://marlinfw.org/docs/gcode/G029-mbl.html If used with a 1284P board the bootscreen will be disabled to save space.
+// Mesh Bed Leveling Documentation: http://marlinfw.org/docs/gcode/G029-mbl.html 
 // NOTE: If you want to automate the leveling process our EZABL kits do this for you. Check them out here: http://EZABL.TH3DStudio.com
 //#define MANUAL_MESH_LEVELING
 
@@ -297,7 +290,6 @@
 
 // MOTION SETTINGS ---------------------------------
 // If you do not like the new Junction Deviation (Jerk) and/or S-Curve Acceleration then you can uncomment the below lines to disable each feature.
-// Due to Anet board restrictions this is always disabled on those machines.
 //#define JUNCTION_DEVIATION_DISABLE
 //#define S_CURVE_ACCELERATION_DISABLE
 
@@ -320,4 +312,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.8a"
+#define UNIFIED_VERSION "TH3D U2.R1.8b"
