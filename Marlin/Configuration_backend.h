@@ -171,6 +171,11 @@
     #define Z_MAX_POS 300
     #define PRINTER_VOLTAGE_24
   #endif
+  
+  #if ENABLED(CUSTOM_ZHEIGHT)
+    #undef Z_MAX_POS
+    #define Z_MAX_POS CUSTOM_ZHEIGHT
+  #endif
 
   #if ENABLED(HOME_ADJUST)
     #define X_MIN_POS X_HOME_LOCATION

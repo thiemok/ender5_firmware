@@ -95,6 +95,7 @@
 // By default we have StealthChop2 Disabled for the E axis. This is due to the possibility of losing steps
 // due to the low torque nature of StealthChop2. If you want to quiet down the E motor you can uncomment the
 // below line. However, if you get lost steps and inconsistent extrusion then disable this option.
+// DO NOT USE STEALTHCHOP_E WHEN USING LINEAR ADVANCE.
 //#define STEALTHCHOP_E
 
 // If you are having issues with the EZABL not triggering when connected to the Z-Stop header you can use the
@@ -102,6 +103,9 @@
 // servo header and uncomment the below line to switch the Z endstop over to that pin.
 // See here for details: https://www.th3dstudio.com/knowledgebase/ezabl-ezboard-not-triggering-fix/
 //#define V3_EZABL_ON_SERVO
+
+// If you are using a modded machine with a higher Z height use the below option to change the height. This value is in mm.
+//#define CUSTOM_ZHEIGHT 400
 
 //===========================================================================
 // *************************  END PRINTER SECTION   *************************
@@ -312,4 +316,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.8b"
+#define UNIFIED_VERSION "TH3D U2.R1.9"
