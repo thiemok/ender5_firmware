@@ -31,7 +31,7 @@
  * PEBCAK Error Checks
  */
  
-#if ENABLED(STEALTHCHOP_E) && ENABLED(STEALTHCHOP_E)
+#if ENABLED(STEALTHCHOP_E) && ENABLED(LINEAR_ADVANCE)
   #error "StealthChop and Linear Advance will not work correctly on the TMC2208 drivers due to low torque. Either disable Linear Advance or disable StealthChop on the E driver"
 #endif
 
