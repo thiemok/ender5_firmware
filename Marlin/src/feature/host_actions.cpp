@@ -37,8 +37,6 @@
   #include "runout.h"
 #endif
 
-extern bool wait_for_user;
-
 void host_action(const char * const pstr, const bool eol) {
   SERIAL_ECHOPGM("//action:");
   serialprintPGM(pstr);
@@ -65,6 +63,10 @@ void host_action(const char * const pstr, const bool eol) {
 #endif
 
 #if ENABLED(HOST_PROMPT_SUPPORT)
+
+  #if HAS_RESUME_CONTINUE
+    extern bool wait_for_user;
+  #endif
 
   PromptReason host_prompt_reason = PROMPT_NOT_DEFINED;
 
@@ -100,8 +102,8 @@ void host_action(const char * const pstr, const bool eol) {
 
   void host_response_handler(const uint8_t response) {
     #ifdef DEBUG_HOST_ACTIONS
-      SERIAL_ECHOLNPAIR("M86 Handle Reason: ", host_prompt_reason);
-      SERIAL_ECHOLNPAIR("M86 Handle Response: ", response);
+      SERIAL_ECHOLNPAIR("M876 Handle Reason: ", host_prompt_reason);
+      SERIAL_ECHOLNPAIR("M876 Handle Response: ", response);
     #endif
     const char *msg = PSTR("UNKNOWN STATE");
     const PromptReason hpr = host_prompt_reason;
@@ -141,13 +143,16 @@ void host_action(const char * const pstr, const bool eol) {
         }
         break;
       case PROMPT_USER_CONTINUE:
+        #if HAS_RESUME_CONTINUE
+          wait_for_user = false;
+        #endif
         msg = PSTR("FILAMENT_RUNOUT_CONTINUE");
-        wait_for_user = false;
         break;
       case PROMPT_PAUSE_RESUME:
         msg = PSTR("LCD_PAUSE_RESUME");
         #if ENABLED(ADVANCED_PAUSE_FEATURE)
-          queue.inject_P(PSTR("M24"));
+          extern const char M24_STR[];
+          queue.inject_P(M24_STR);
         #endif
         break;
       case PROMPT_INFO:

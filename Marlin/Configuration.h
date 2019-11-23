@@ -80,12 +80,10 @@
 
 // Axis Direction Settings
 // If you need to reverse the direction of a motor uncomment the below option for that axis.
-// If you need to use this setting please report the printer model you have and what axis was inversed to
-// TH3D support by emailing Support@TH3DStudio.com so we can make updates for that machine.
+// E motor settings are below in the Extruder Settings Section
 //#define REVERSE_X_MOTOR
 //#define REVERSE_Y_MOTOR
 //#define REVERSE_Z_MOTOR
-//#define REVERSE_E_MOTOR
 
 // Dual Z Motor Settings
 // When running dual Z motors uncomment the below line. This will increase the Z motor driver current for 2x motors.
@@ -125,7 +123,7 @@
 // You can do down to 10mm on the Wanhao i3 since it cannot print on the entire bed.
 // You can do down to 5mm on the Wanhao i3 Mini since it cannot print on the entire bed.
 // (only used if EZABL enabled)
-#define EZABL_PROBE_EDGE 15
+#define EZABL_PROBE_EDGE 35
 
 // If you have issues with your machine running the faster probe setting disable the #define EZABL_FASTPROBE below.
 // DO NOTE: Most machines will work with the fast probe enabled. Use M48 to verify accuracy.
@@ -164,26 +162,27 @@
 //================================================================================
 #if ENABLED(CUSTOM_PROBE)
   /**
-  *   Z Probe to nozzle (X,Y) offset, relative to (0, 0).
-  *   X and Y offsets must be whole numbers.
+  * Z Probe to nozzle (X,Y) offset, relative to (0, 0).
   *
-  *   In the following example the X and Y offsets are both positive:
-  *   #define X_PROBE_OFFSET_FROM_EXTRUDER 10
-  *   #define Y_PROBE_OFFSET_FROM_EXTRUDER 10
+  * In the following example the X and Y offsets are both positive:
   *
-  *      +-- BACK ---+
-  *      |           |
-  *    L |    (+) P  | R <-- probe (10,10)
-  *    E |           | I
-  *    F | (-) N (+) | G <-- nozzle (0,0)
-  *    T |           | H
-  *      |    (-)    | T
-  *      |           |
-  *      O-- FRONT --+
-  *    (0,0)
+  *   #define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
+  *
+  *     +-- BACK ---+
+  *     |           |
+  *   L |    (+) P  | R <-- probe (20,20)
+  *   E |           | I
+  *   F | (-) N (+) | G <-- nozzle (10,10)
+  *   T |           | H
+  *     |    (-)    | T
+  *     |           |
+  *     O-- FRONT --+
+  *   (0,0)
+  *
+  * Specify a Probe position as { X, Y, Z }
+  * Do NOT enter an number for the Z position in here. Store your offset in EEPROM.
   */
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 10  // X offset: -left  +right  [of the nozzle]
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 10  // Y offset: -front +behind [the nozzle]
+  #define NOZZLE_TO_PROBE_OFFSET { 10, 10, 0 }
 #endif
 
 //===========================================================================
@@ -192,14 +191,20 @@
 
 // EXTRUDER SETTINGS -------------------------------
 
-// If you want to change the Esteps for your printer you can uncomment the below line and set CUSTOM_ESTEPS_VALUE to what you want - USE WHOLE NUMBERS ONLY
-//#define CUSTOM_ESTEPS
-#define CUSTOM_ESTEPS_VALUE 999
+// Use to set custom esteps and/or reverse your E Motor direction if you are installing an extruder that needs the direction reversed.
+// If you reversed the wiring on your E motor already (like the Bondtech Guide says to do) then you do not need to reverse it in the firmware here.
 
-// If you are using an TH3D Tough Extruder, Bondtech BMG (set steps below to 415), or E3D Titan Extruder
-// uncomment the below line to setup the firmware to the correct steps and direction. Also applicable to Titan/Tough Aero setups.
-//#define TITAN_EXTRUDER
-#define TITAN_EXTRUDER_STEPS 463
+// If you want to change the Esteps for your printer you can uncomment the below line and set CUSTOM_ESTEPS_VALUE to what you want - USE WHOLE NUMBERS ONLY
+// This option sets the esteps from the CUSTOM_ESTEPS_VALUE line below.
+// If you need to reverse the e motor direction also enabled the REVERSE_E_MOTOR_DIRECTION option.
+// Example EStep Values: TH3D Aluminum Extruder - 95 ESteps, TH3D Tough Extruder - 463 ESteps, BMG Extruder - 415 ESteps
+// When installing a Tough Extruder or E3D Titan or Bondtech that is Geared you likely need to enable the REVERSE_E_MOTOR_DIRECTION option
+//#define CUSTOM_ESTEPS
+//#define REVERSE_E_MOTOR_DIRECTION
+#define CUSTOM_ESTEPS_VALUE 463
+
+// If you are using a pancake stepper enable the PANCAKE_STEPPER option to reduce the motor current to lower the stepper temperature
+//#define PANCAKE_STEPPER
 
 // THERMISTOR SETTINGS -----------------------------
 
@@ -267,7 +272,7 @@
 // LINEAR ADVANCE ----------------------------------
 // See here on how to use Linear Advance: http://marlinfw.org/docs/features/lin_advance.html
 //
-//#define LINEAR_ADVANCE
+#define LINEAR_ADVANCE
 // Change the K Value here or use M900 KX.XX in your starting code (recommended).
 #define LINEAR_ADVANCE_K 0
 
@@ -297,6 +302,15 @@
 //#define JUNCTION_DEVIATION_DISABLE
 //#define S_CURVE_ACCELERATION_DISABLE
 
+//===========================================================================
+//************************ EXPERIMENTAL FEATURES ****************************
+//===========================================================================
+
+// If you want to run the XYZ motors in 1/256 stepping mode with no interpolation uncomment the below line.
+// This is a feature still in testing and there may be step loss or other issues with it.
+// This does not set the E motor to 1/256 stepping due to step loss on E when this was tested.
+//#define TMC_NATIVE_256_STEPPING
+
 //================================================================================================
 // Language - This is provided for convenience and is unsupported with included product support.
 // We only test compile with English language. If you run into space issues disable some features.
@@ -316,4 +330,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.9a"
+#define UNIFIED_VERSION "TH3D U2.R1.10.B1"

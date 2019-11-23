@@ -17,33 +17,27 @@
   #define EZABL_ENABLE
 #endif
 #if ENABLED(CR10_VOLCANO)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 30
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 12
+  #define NOZZLE_TO_PROBE_OFFSET { 30, 12, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(CR10_V6HEAVYDUTY)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 63
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 0
+  #define NOZZLE_TO_PROBE_OFFSET { 63, 0, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(CR10_OEM)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -44
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -10
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(TM3DAERO)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -51
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -7
+  #define NOZZLE_TO_PROBE_OFFSET { -51, -7, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(TM3DAERO_EXTENDED)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -55
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -7
+  #define NOZZLE_TO_PROBE_OFFSET { -55, -7, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(PETSFANG)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 48
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -2
+  #define NOZZLE_TO_PROBE_OFFSET { 48, -2, 0 }
   #define EZABL_ENABLE
 #endif
 
@@ -63,14 +57,18 @@
   #define Z_MAX_ENDSTOP_INVERTING false
   #define Z_MIN_PROBE_ENDSTOP_INVERTING false
 
-  #if ENABLED(TITAN_EXTRUDER)
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, TITAN_EXTRUDER_STEPS }
+  #if ENABLED(TMC_NATIVE_256_STEPPING)
+    #if ENABLED(CUSTOM_ESTEPS)
+  	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, CUSTOM_ESTEPS_VALUE }
+  	#else
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, 95 }
+	  #endif
   #else
     #if ENABLED(CUSTOM_ESTEPS)
-	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
-	#else
+  	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+  	#else
       #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 95 }
-	#endif
+	  #endif
   #endif
 
   #define DEFAULT_MAX_FEEDRATE          { 200, 200, 30, 50 }
@@ -79,16 +77,6 @@
   #define DEFAULT_ACCELERATION          500
   #define DEFAULT_RETRACT_ACCELERATION  500
   #define DEFAULT_TRAVEL_ACCELERATION   500
-
-  #if ENABLED(CR10_S4) || ENABLED(CR10_S5)
-    #define DEFAULT_XJERK                 5.0
-    #define DEFAULT_YJERK                 5.0
-  #else
-    #define DEFAULT_XJERK                 7.0
-    #define DEFAULT_YJERK                 7.0
-  #endif
-  #define DEFAULT_ZJERK                  0.3
-  #define DEFAULT_EJERK                  5.0
 
   #if ENABLED(REVERSE_X_MOTOR)
     #define INVERT_X_DIR false
@@ -116,14 +104,10 @@
     #endif
   #endif
 
-  #if ENABLED(TITAN_EXTRUDER)
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
     #define INVERT_E0_DIR false
   #else
-    #if ENABLED(REVERSE_E_MOTOR)
-      #define INVERT_E0_DIR false
-    #else
-      #define INVERT_E0_DIR true
-    #endif
+    #define INVERT_E0_DIR true
   #endif
 
   #ifndef MOTHERBOARD
@@ -216,8 +200,6 @@
 
 #define STRING_CONFIG_H_AUTHOR "(TH3D)"
 #define SHOW_BOOTSCREEN
-#define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION
-#define STRING_SPLASH_LINE2 WEBSITE_URL
 
 #define SHOW_CUSTOM_BOOTSCREEN
 //#define CUSTOM_STATUS_SCREEN_IMAGE
@@ -386,8 +368,6 @@
     #define FIX_MOUNTED_PROBE
   #endif
 
-  #define Z_PROBE_OFFSET_FROM_EXTRUDER 0
-
   #if ENABLED(PROBING_MOTORS_OFF)
     #define XY_PROBE_SPEED 8000
   #else
@@ -445,10 +425,10 @@
   #define GRID_MAX_POINTS_X EZABL_POINTS
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  #define LEFT_PROBE_BED_POSITION (max(EZABL_PROBE_EDGE, X_PROBE_OFFSET_FROM_EXTRUDER))
-  #define RIGHT_PROBE_BED_POSITION (min(X_BED_SIZE - EZABL_PROBE_EDGE, X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER))
-  #define FRONT_PROBE_BED_POSITION (max(EZABL_PROBE_EDGE, Y_PROBE_OFFSET_FROM_EXTRUDER))
-  #define BACK_PROBE_BED_POSITION (min(Y_BED_SIZE - EZABL_PROBE_EDGE, Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER))
+  #define MIN_PROBE_EDGE_LEFT EZABL_PROBE_EDGE
+  #define MIN_PROBE_EDGE_RIGHT EZABL_PROBE_EDGE
+  #define MIN_PROBE_EDGE_FRONT EZABL_PROBE_EDGE
+  #define MIN_PROBE_EDGE_BACK EZABL_PROBE_EDGE
 
   #define MIN_PROBE_EDGE 5
 
@@ -476,6 +456,28 @@
 #if DISABLED(S_CURVE_ACCELERATION_DISABLE)
   #define S_CURVE_ACCELERATION
 #endif
+
+#if ENABLED(JUNCTION_DEVIATION_DISABLE)
+  #define CLASSIC_JERK
+
+  #if ENABLED(CR10_S4) || ENABLED(CR10_S5)
+    #define DEFAULT_XJERK                 5.0
+    #define DEFAULT_YJERK                 5.0
+  #else
+    #define DEFAULT_XJERK                 7.0
+    #define DEFAULT_YJERK                 7.0
+  #endif
+  #define DEFAULT_ZJERK                   0.3
+
+  #define LIMITED_JERK_EDITING        // Limit edit via M205 or LCD to DEFAULT_aJERK * 2
+  #if ENABLED(LIMITED_JERK_EDITING)
+    #define MAX_JERK_EDIT_VALUES { 20, 20, 0.6, 10 } // ...or, set your own edit limits
+  #endif
+#else
+  #define JUNCTION_DEVIATION_MM 0.013 // (mm) Distance from real junction edge
+#endif
+
+#define DEFAULT_EJERK    5.0  // May be used by Linear Advance
 
 #define X_ENABLE_ON 0
 #define Y_ENABLE_ON 0
@@ -562,6 +564,7 @@
 
 #define EEPROM_SETTINGS
 #define EEPROM_CHITCHAT
+#define EEPROM_AUTO_INIT
 
 #define HOST_KEEPALIVE_FEATURE
 #define DEFAULT_KEEPALIVE_INTERVAL 2

@@ -330,9 +330,9 @@
 #if ENABLED(BABYSTEPPING)
   #define BABYSTEP_INVERT_Z false
   #if ENABLED(FINE_BABYSTEPPING)
-    #define BABYSTEP_MULTIPLICATOR 1
+    #define BABYSTEP_MULTIPLICATOR_Z 1
   #else
-    #define BABYSTEP_MULTIPLICATOR 10
+    #define BABYSTEP_MULTIPLICATOR_Z 10
   #endif
   #define DOUBLECLICK_FOR_Z_BABYSTEPPING
   #define DOUBLECLICK_MAX_INTERVAL 2000
@@ -424,11 +424,19 @@
 #if HAS_TRINAMIC
 
   #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
-  #define INTERPOLATE       true  // Interpolate X/Y/Z_MICROSTEPS to 256
+  #if ENABLED(TMC_NATIVE_256_STEPPING)
+    #define INTERPOLATE false
+  #else
+    #define INTERPOLATE true
+  #endif
 
   #if AXIS_IS_TMC(X)
-    #define X_CURRENT     600  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #define X_MICROSTEPS   16  // 0..256
+    #define X_CURRENT      600  // (mA) RMS current. Multiply by 1.414 for peak current.
+    #if ENABLED(TMC_NATIVE_256_STEPPING)
+      #define X_MICROSTEPS 256
+    #else
+      #define X_MICROSTEPS 16
+    #endif
     #define X_RSENSE     0.11
   #endif
 
@@ -440,7 +448,11 @@
 
   #if AXIS_IS_TMC(Y)
     #define Y_CURRENT     600
-    #define Y_MICROSTEPS   16
+    #if ENABLED(TMC_NATIVE_256_STEPPING)
+      #define Y_MICROSTEPS 256
+    #else
+      #define Y_MICROSTEPS 16
+    #endif
     #define Y_RSENSE     0.11
   #endif
 
@@ -456,7 +468,11 @@
     #else
       #define Z_CURRENT     700
     #endif
-    #define Z_MICROSTEPS   16
+    #if ENABLED(TMC_NATIVE_256_STEPPING)
+      #define Z_MICROSTEPS 256
+    #else
+      #define Z_MICROSTEPS 16
+    #endif
     #define Z_RSENSE     0.11
   #endif
 
@@ -473,7 +489,12 @@
   #endif
 
   #if AXIS_IS_TMC(E0)
-    #define E0_CURRENT    800
+    #if ENABLED(PANCAKE_STEPPER)
+      #define E0_CURRENT    600
+    #else
+      #define E0_CURRENT    800
+    #endif
+    
     #define E0_MICROSTEPS  16
     #define E0_RSENSE    0.11
   #endif
