@@ -206,12 +206,11 @@
 #define SHOW_BOOTSCREEN
 
 #define SHOW_CUSTOM_BOOTSCREEN
-//#define CUSTOM_STATUS_SCREEN_IMAGE
-
-//Fixes issues with XY not homing due to noisy endstop cables
-#define ENDSTOP_NOISE_THRESHOLD 2
+#define CUSTOM_VERSION_FILE Version.h
 
 #define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
+
+#define ENDSTOP_NOISE_THRESHOLD 2
 
 #if ENABLED(EZBOARD_PT100)
   #define TEMP_SENSOR_0 20
