@@ -21,24 +21,7 @@
  */
 #pragma once
 
-/**
- * Configuration_adv.h
- *
- * Advanced settings.
- * Only change these if you know exactly what you're doing.
- * Some of these settings can damage your printer if improperly set!
- *
- * Basic settings can be found in Configuration.h
- *
- */
 #define CONFIGURATION_ADV_H_VERSION 020000
-
-// @section temperature
-
-//===========================================================================
-//=============================Thermal Settings  ============================
-//===========================================================================
-
 
 #if DISABLED(PIDTEMPBED)
   #define BED_CHECK_INTERVAL 500
@@ -62,16 +45,14 @@
   #define WATCH_BED_TEMP_PERIOD 60                // Seconds
   #define WATCH_BED_TEMP_INCREASE 2               // Degrees Celsius
 #endif
-#define TEMP_SENSOR_AD595_OFFSET  0.0
-#define TEMP_SENSOR_AD595_GAIN    1.0
-#define TEMP_SENSOR_AD8495_OFFSET 0.0
-#define TEMP_SENSOR_AD8495_GAIN   1.0
 
-#define USE_CONTROLLER_FAN
-#if ENABLED(USE_CONTROLLER_FAN)
-  #define CONTROLLER_FAN_PIN P1_22       // Set a custom pin for the controller fan
-  #define CONTROLLERFAN_SECS 60          // Duration in seconds for the fan to run after all motors are disabled
-  #define CONTROLLERFAN_SPEED 204        // 255 == full speed
+#if ENABLED(EZBOARD)
+  #define USE_CONTROLLER_FAN
+  #if ENABLED(USE_CONTROLLER_FAN)
+    #define CONTROLLER_FAN_PIN P1_22       // Set a custom pin for the controller fan
+    #define CONTROLLERFAN_SECS 60          // Duration in seconds for the fan to run after all motors are disabled
+    #define CONTROLLERFAN_SPEED 204        // 255 == full speed
+  #endif
 #endif
 
 #define E0_AUTO_FAN_PIN -1
@@ -82,7 +63,7 @@
 #define E5_AUTO_FAN_PIN -1
 #define CHAMBER_AUTO_FAN_PIN -1
 #define EXTRUDER_AUTO_FAN_TEMPERATURE 50
-#define EXTRUDER_AUTO_FAN_SPEED 255   // 255 == full speed
+#define EXTRUDER_AUTO_FAN_SPEED 255
 
 #define FANMUX0_PIN -1
 #define FANMUX1_PIN -1
@@ -118,8 +99,6 @@
 
 //#define HOME_AFTER_DEACTIVATE  // Require rehoming after steppers are deactivated
 
-// @section lcd
-
 #if ENABLED(ULTIPANEL)
   #define MANUAL_FEEDRATE {70*60, 70*60, 4*60, 60}
   #define MANUAL_E_MOVES_RELATIVE
@@ -139,6 +118,14 @@
 //#define ADAPTIVE_STEP_SMOOTHING
 
 #define MICROSTEP_MODES { 16, 16, 16, 16, 16, 16 }
+
+#if ENABLED(DIGIPOT_I2C) && !defined(DIGIPOT_I2C_ADDRESS_A)
+  #define DIGIPOT_I2C_ADDRESS_A 0x2C  // unshifted slave address for first DIGIPOT
+  #define DIGIPOT_I2C_ADDRESS_B 0x2D  // unshifted slave address for second DIGIPOT
+#endif
+
+#define DIGIPOT_I2C_NUM_CHANNELS 8 // 5DPRINT: 4     AZTEEG_X3_PRO: 8     MKS SBASE: 5
+#define DIGIPOT_I2C_MOTOR_CURRENTS { 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0 }  //  AZTEEG_X3_PRO
 
 #define ENCODER_RATE_MULTIPLIER
 #define ENCODER_10X_STEPS_PER_SEC   75
@@ -188,21 +175,8 @@
   // Since the FAT gets out of order with usage, SDCARD_SORT_ALPHA is recommended.
   //#define SDCARD_RATHERRECENTFIRST
 
+  #define SD_MENU_CONFIRM_START             // Confirm the selected SD file before printing
   #define EVENT_GCODE_SD_STOP "G28XY"
-
-  /**
-   * Continue after Power-Loss (Creality3D)
-   *
-   * Store the current state to the SD Card at the start of each layer
-   * during SD printing. If the recovery file is found at boot time, present
-   * an option on the LCD screen to continue the print from the last-known
-   * point in the file.
-   */
-  //#define POWER_LOSS_RECOVERY
-  #if ENABLED(POWER_LOSS_RECOVERY)
-    //#define POWER_LOSS_PIN   44     // Pin to detect power loss
-    //#define POWER_LOSS_STATE HIGH   // State of pin indicating power loss
-  #endif
 
   /**
    * Sort SD file listings in alphabetical order.
@@ -247,6 +221,11 @@
 
   // Enable this option to scroll long filenames in the SD card menu
   #define SCROLL_LONG_FILENAMES
+
+  /**
+   * Auto-report SdCard status with M27 S<seconds>
+   */
+  #define AUTO_REPORT_SD_STATUS
 
   /**
    * When using a bootloader that supports SD-Firmware-Flashing,
@@ -306,14 +285,46 @@
   //#define STATUS_ALT_BED_BITMAP     // Use the alternative bed bitmap
   //#define STATUS_ALT_FAN_BITMAP     // Use the alternative fan bitmap
   //#define STATUS_FAN_FRAMES 3       // :[0,1,2,3,4] Number of fan animation frames
-  //#define STATUS_HEAT_PERCENT       // Show heating in a progress bar
+  #define STATUS_HEAT_PERCENT       // Show heating in a progress bar
+  //#define BOOT_MARLIN_LOGO_SMALL    // Show a smaller Marlin logo on the Boot Screen (saving 399 bytes of flash)
+  #define BOOT_MARLIN_LOGO_ANIMATED // Animated Marlin logo. Costs ~‭3260 (or ~940) bytes of PROGMEM.
 
   // Frivolous Game Options
-  #define MARLIN_BRICKOUT
-  #define MARLIN_INVADERS
-  #define MARLIN_SNAKE
+  #if ENABLED(EZBOARD)
+    #define MARLIN_BRICKOUT
+    #define MARLIN_INVADERS
+    #define MARLIN_SNAKE
+  #endif
 
 #endif // HAS_GRAPHICAL_LCD
+
+//
+// Lulzbot Touch UI
+//
+#if ENABLED(LULZBOT_TOUCH_UI)
+  #if ENABLED(OTHER_PIN_LAYOUT)
+    #define CLCD_MOD_RESET  9
+    #define CLCD_SPI_CS    10
+  #endif
+  #if ENABLED(TOUCH_UI_USE_UTF8)
+    #define TOUCH_UI_UTF8_WESTERN_CHARSET
+  #endif
+
+  #define TOUCH_UI_FIT_TEXT
+
+#endif
+
+//
+// FSMC Graphical TFT
+//
+#if ENABLED(FSMC_GRAPHICAL_TFT)
+   #define TFT_MARLINUI_COLOR 0x145F // CYAN
+   #define TFT_MARLINBG_COLOR 0x0000 // Black
+   #define TFT_DISABLED_COLOR 0xDEE6 // Almost black
+   #define TFT_BTCANCEL_COLOR 0xF800 // Red
+   #define TFT_BTARROWS_COLOR 0xFFFF // WHITE
+   #define TFT_BTOKMENU_COLOR 0x0F0F // GREEN
+#endif
 
 #define USE_WATCHDOG
 
@@ -398,6 +409,7 @@
   #define ADVANCED_PAUSE_PURGE_FEEDRATE        3
   #define ADVANCED_PAUSE_PURGE_LENGTH         50
   #define ADVANCED_PAUSE_RESUME_PRIME          0
+  #define ADVANCED_PAUSE_FANS_PAUSE
   #define FILAMENT_UNLOAD_RETRACT_LENGTH      13
   #define FILAMENT_UNLOAD_DELAY             5000
   #define FILAMENT_UNLOAD_PURGE_LENGTH         8
@@ -405,6 +417,7 @@
   #define FILAMENT_CHANGE_ALERT_BEEPS         10
   #define PAUSE_PARK_NO_STEPPER_TIMEOUT
   #define PARK_HEAD_ON_PAUSE
+  #define FILAMENT_LOAD_UNLOAD_GCODES
 #endif
 
 #define  X_SLAVE_ADDRESS 0

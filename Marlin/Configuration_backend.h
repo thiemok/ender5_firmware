@@ -43,7 +43,10 @@
 
 //CR-10 and Ender 3 Model Settings
 #if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(ENDER3) || ENABLED(ENDER5)
+  #define SERIAL_PORT -1
   #define BAUDRATE 115200
+  
+  #define EXTRUDERS 1
 
   #define CR10_STOCKDISPLAY
 
@@ -173,6 +176,7 @@
   #define ENCODER_STEPS_PER_MENU_ITEM 1
 
   #define PRINTER_ENABLED_CHECK
+  #define EZBOARD
 
 #endif //end CR-10
 
@@ -207,10 +211,6 @@
 //Fixes issues with XY not homing due to noisy endstop cables
 #define ENDSTOP_NOISE_THRESHOLD 2
 
-#define SERIAL_PORT -1
-
-#define EXTRUDERS 1
-
 #define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
 
 #if ENABLED(EZBOARD_PT100)
@@ -230,7 +230,6 @@
 #define TEMP_SENSOR_4 0
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_CHAMBER 0
-#define HEATER_CHAMBER_PIN -1
 
 #if ENABLED(AC_BED)
   #define TEMP_SENSOR_BED 0
@@ -244,13 +243,13 @@
   #define TEMP_SENSOR_BED 5
 #endif
 
-#define TEMP_RESIDENCY_TIME 5
-#define TEMP_HYSTERESIS 3
-#define TEMP_WINDOW     1
+#define TEMP_RESIDENCY_TIME     5
+#define TEMP_HYSTERESIS         3
+#define TEMP_WINDOW             1
 
 #define TEMP_BED_RESIDENCY_TIME 5
-#define TEMP_BED_HYSTERESIS 3
-#define TEMP_BED_WINDOW     1
+#define TEMP_BED_HYSTERESIS     3
+#define TEMP_BED_WINDOW         1
 
 #define HEATER_0_MINTEMP 5
 #define HEATER_1_MINTEMP HEATER_0_MINTEMP
@@ -288,7 +287,6 @@
 #endif
 
 #define PIDTEMPBED
-
 #define MAX_BED_POWER 255
 
 #if ENABLED(PIDTEMPBED)
@@ -308,20 +306,6 @@
 
 #define THERMAL_PROTECTION_HOTENDS
 #define THERMAL_PROTECTION_BED
-
-/**
- * Endstop Noise Threshold
- *
- * Enable if your probe or endstops falsely trigger due to noise.
- *
- * - Higher values may affect repeatability or accuracy of some bed probes.
- * - To fix noise install a 100nF ceramic capacitor inline with the switch.
- * - This feature is not required for common micro-switches mounted on PCBs
- *   based on the Makerbot design, which already have the 100nF capacitor.
- *
- * :[2,3,4,5,6,7]
- */
-//#define ENDSTOP_NOISE_THRESHOLD 2
 
 #if ENABLED(ENDER5)
   #define USE_XMAX_PLUG
@@ -541,7 +525,6 @@
     #define FIL_RUNOUT_PULLUP
     #define FILAMENT_RUNOUT_SCRIPT "M600"
   #endif
-
 #endif
 
 #if ENABLED(MANUAL_MESH_LEVELING) && DISABLED(EZABL_ENABLE)
@@ -600,7 +583,6 @@
 #define INDIVIDUAL_AXIS_HOMING_MENU
 
 #define LEVEL_BED_CORNERS
-
 #if ENABLED(LEVEL_BED_CORNERS)
   #define LEVEL_CORNERS_INSET 30
   #define LEVEL_CORNERS_Z_HOP 5.0
