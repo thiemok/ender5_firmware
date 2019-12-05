@@ -21,6 +21,6 @@ It is highly recommended to use the EZFirmware web compiler tool if you are an e
 **THIS IS PROVIDED UNDER THE GPL V3 LICENSE.
 PROVIDED AS-IS. NO SUPPORT OR WARRANTY IS PROVIDED.**
 
-Based on [Marlin](http://marlinfw.org) 2.0 bugfix (pulled on 11/23/2019) and our own custom additions. 
+Based on [Marlin](http://marlinfw.org) 2.0 and our own custom additions. 
 
 If you have a custom machine it is best to use vanilla [Marlin](http://marlinfw.org).

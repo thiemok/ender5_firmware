@@ -110,8 +110,10 @@
 #else
   #define TEMP_0_PIN        P0_23_A0   // Analog Input P0_23
 #endif
+
 #define TEMP_BED_PIN        P0_24_A1   // Analog Input P0_24
 #define TEMP_1_PIN          P0_25_A2   // Analog Input P0_25
+
 #if ENABLED(FILAMENT_WIDTH_SENSOR)
   #define FILWIDTH_PIN      P0_26_A3   // Analog Input P0_26
 #else
