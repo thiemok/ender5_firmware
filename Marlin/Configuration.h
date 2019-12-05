@@ -1,6 +1,9 @@
 /**
 * ************** How to use this firmware - READ THIS, yes actually read this. *********************************
 *
+* If you are having general compile issues please visit http://EZFirmware.TH3DStudio.com and use our web compile tool.
+* You can upload this file to our server and have it compile it for you. This is much easier and quicker than your local PC.
+*
 * Uncomment means removing the 2 // in front of #define.
 *
 * EZABL SETUP NOTES:
@@ -23,9 +26,6 @@
 * ERROR NOTES:
 * If you get errors flashing READ the message it gives you. Turn off any AV systems and reboot the computer.
 *
-* If you are having general compile issues please visit http://EZFirmware.TH3DStudio.com and use our web compile tool.
-* You can upload this file to our server and have it compile it for you. This is much easier and quicker than your local PC.
-*
 * If there is an option that has text make sure to keep the " marks around the text or the compile will fail.
 *
 * COMMUNITY REQUESTED FEATURES NOTE:
@@ -44,28 +44,37 @@
 // ONLY UNCOMMENT THINGS IN ONE PRINTER SECTION!!! IF YOU HAVE MULTIPLE MACHINES FLASH THEM ONE AT A TIME.
 
 //===========================================================================
-// *************************   CREALITY PRINTERS    *************************
-// *************************    EZBOARD SECTION     *************************
+// ****************    EZBoard Lite Printer Configuration    ****************
 //===========================================================================
 
-//===========================================================================
-// Creality CR-10/CR-10S/Ender3/Ender5 Options - CR-10S use the CR-10 option
-//===========================================================================
+//CR-10 Series (Single Z Motor)
 //#define CR10
 //#define CR10_MINI
 //#define CR10_S4
 //#define CR10_S5
+
+//CR-10S Series (Dual Z Motors) - Setting a "S" model here will automatically enable the reverse Z for use with the dual Z adapter and increase the Z vref.
+//#define CR10S
+//#define CR10S_MINI
+//#define CR10S_S4
+//#define CR10S_S5
+
+//Ender Series
 //#define ENDER3
 //#define ENDER5
 
-// If you are using our EZOut Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header.
+//Sovol Machines - BETA SUPPORT
+//#define SOVOL_SV01
+
+// If you are using our EZOut Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header and uncomment the below line.
 //#define EZOUTV2_ENABLE
 
-// If you are using the Stock Creality CR-10S Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header.
+// If you are using the Stock Creality CR-10S or Sovol SV01 Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header and uncomment the below line.
 //#define CR10S_STOCKFILAMENTSENSOR
 
 // EZABL Probe Mounts
-//#define CR10_OEM
+//#define CR10_OEM //OEM Mount for Creality Machines (Ender3/5/CR-10/CR-10S)
+//#define SV01_OEM_MOUNT //Sovol SV01 OEM Mount
 //#define CR10_VOLCANO
 //#define CR10_V6HEAVYDUTY
 //#define CR10_FANG
@@ -78,6 +87,21 @@
 // Refer to the EZBoard installation documentation for connecting the PT100 to the EZBoard Expansion Header
 //#define EZBOARD_PT100
 
+// If you are having issues with the EZABL not triggering when connected to the Z-Stop header you can use the
+// servo header pins. Connect the 2 wires going to the EZABL Board Z endstop side to the GND and SIG pins on the
+// servo header and uncomment the below line to switch the Z endstop over to that pin.
+// See here for details: https://www.th3dstudio.com/knowledgebase/ezabl-ezboard-not-triggering-fix/
+//#define V3_EZABL_ON_SERVO
+
+// Advanced Settings -------------------------------
+
+// If you are using a modded machine with a higher Z height use the below option to change the height. This value is in mm.
+//#define CUSTOM_ZHEIGHT 400
+
+// Dual Z Motor Settings
+// When running dual Z motors uncomment the below line. This will increase the Z motor driver current for 2x motors.
+//#define DUAL_Z_MOTORS
+
 // Axis Direction Settings
 // If you need to reverse the direction of a motor uncomment the below option for that axis.
 // E motor settings are below in the Extruder Settings Section
@@ -85,25 +109,12 @@
 //#define REVERSE_Y_MOTOR
 //#define REVERSE_Z_MOTOR
 
-// Dual Z Motor Settings
-// When running dual Z motors uncomment the below line. This will increase the Z motor driver current for 2x motors.
-//#define DUAL_Z_MOTORS
-
 // E Motor Torque Settings
 // By default we have StealthChop2 Disabled for the E axis. This is due to the possibility of losing steps
 // due to the low torque nature of StealthChop2. If you want to quiet down the E motor you can uncomment the
 // below line. However, if you get lost steps and inconsistent extrusion then disable this option.
 // DO NOT USE STEALTHCHOP_E WHEN USING LINEAR ADVANCE.
 //#define STEALTHCHOP_E
-
-// If you are having issues with the EZABL not triggering when connected to the Z-Stop header you can use the
-// servo header pins. Connect the 2 wires going to the EZABL Board Z endstop side to the GND and SIG pins on the
-// servo header and uncomment the below line to switch the Z endstop over to that pin.
-// See here for details: https://www.th3dstudio.com/knowledgebase/ezabl-ezboard-not-triggering-fix/
-//#define V3_EZABL_ON_SERVO
-
-// If you are using a modded machine with a higher Z height use the below option to change the height. This value is in mm.
-//#define CUSTOM_ZHEIGHT 400
 
 //===========================================================================
 // *************************  END PRINTER SECTION   *************************
@@ -271,8 +282,7 @@
 
 // LINEAR ADVANCE ----------------------------------
 // See here on how to use Linear Advance: http://marlinfw.org/docs/features/lin_advance.html
-//
-#define LINEAR_ADVANCE
+//#define LINEAR_ADVANCE
 // Change the K Value here or use M900 KX.XX in your starting code (recommended).
 #define LINEAR_ADVANCE_K 0
 
@@ -330,4 +340,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.10.B1"
+#define UNIFIED_VERSION "TH3D U2.R2.1"

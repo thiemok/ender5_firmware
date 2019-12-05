@@ -10,10 +10,13 @@
 #define Y_DRIVER_TYPE  TMC2208
 #define Z_DRIVER_TYPE  TMC2208
 #define E0_DRIVER_TYPE TMC2208
-//#define E1_DRIVER_TYPE TMC2208
 
 //Sensor Mounts
 #if ENABLED(CUSTOM_PROBE)
+  #define EZABL_ENABLE
+#endif
+#if ENABLED(SV01_OEM_MOUNT)
+  #define NOZZLE_TO_PROBE_OFFSET { 22, -50, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(CR10_VOLCANO)
@@ -41,8 +44,26 @@
   #define EZABL_ENABLE
 #endif
 
+#if ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5)
+  //S models assume that you have 2x motors and are using the dual adapter.
+  //So lets up the VREF on Z and reverse the Z axis when using the dual motor adapter
+  #define DUAL_Z_MOTORS
+
+  #define REVERSE_Z_MOTOR
+
+  #if ENABLED(CR10S)
+    #define CR10
+  #elif ENABLED(CR10S_MINI)
+    #define CR10_MINI
+  #elif ENABLED(CR10S_S4)
+    #define CR10_S4
+  #elif ENABLED(CR10S_S5)
+    #define CR10_S5
+  #endif
+#endif
+
 //CR-10 and Ender 3 Model Settings
-#if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(ENDER3) || ENABLED(ENDER5)
+#if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(ENDER3) || ENABLED(ENDER5) || ENABLED(SOVOL_SV01)
   #define SERIAL_PORT -1
   #define BAUDRATE 115200
   
@@ -63,13 +84,17 @@
   #if ENABLED(TMC_NATIVE_256_STEPPING)
     #if ENABLED(CUSTOM_ESTEPS)
   	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, CUSTOM_ESTEPS_VALUE }
-  	#else
+  	#elif ENABLED(SOVOL_SV01)
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, 382.14 }
+    #else
       #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, 95 }
 	  #endif
   #else
     #if ENABLED(CUSTOM_ESTEPS)
   	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
-  	#else
+  	#elif ENABLED(SOVOL_SV01)
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 382.14 }
+    #else
       #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 95 }
 	  #endif
   #endif
@@ -93,7 +118,7 @@
     #define INVERT_Y_DIR true
   #endif
 
-  #if ENABLED(ENDER5)
+  #if ENABLED(ENDER5) || ENABLED(SOVOL_SV01)
     #if ENABLED(REVERSE_Z_MOTOR)
       #define INVERT_Z_DIR false
     #else
@@ -155,6 +180,13 @@
   #if ENABLED(ENDER5)
     #define X_BED_SIZE 220
     #define Y_BED_SIZE 220
+    #define Z_MAX_POS 300
+    #define PRINTER_VOLTAGE_24
+  #endif
+
+  #if ENABLED(SOVOL_SV01)
+    #define X_BED_SIZE 280
+    #define Y_BED_SIZE 240
     #define Z_MAX_POS 300
     #define PRINTER_VOLTAGE_24
   #endif
