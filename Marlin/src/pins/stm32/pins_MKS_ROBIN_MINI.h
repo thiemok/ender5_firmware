@@ -54,7 +54,7 @@
 #define Z_MAX_PIN          PC4
 
 #ifndef FIL_RUNOUT_PIN
-  #define FIL_RUNOUT_PIN   PF11  // MT_DET
+  #define FIL_RUNOUT_PIN   PA4  // MT_DET
 #endif
 
 //
@@ -119,13 +119,25 @@
   #define FSMC_CS_PIN      PD7    // NE4
   #define FSMC_RS_PIN      PD11   // A0
 
-  #define LCD_RESET_PIN    PF6
+  //#define LCD_RESET_PIN    PF6
   #define NO_LCD_REINIT           // Suppress LCD re-initialization
 
   #define LCD_BACKLIGHT_PIN PD13
 
   #if ENABLED(TOUCH_BUTTONS)
-    #define TOUCH_CS_PIN   PC2
+    #define TOUCH_CS_PIN     PC2
+    #define TOUCH_SCK_PIN    PB13
+    #define TOUCH_MOSI_PIN   PB15
+    #define TOUCH_MISO_PIN   PB14
+    
+    //#define LCD_USE_DMA_FSMC   // Use DMA transfers to send data to the TFT
+    //#define FSMC_DMA_DEV     DMA2
+    //#define FSMC_DMA_CHANNEL DMA_CH5
+    #define BTN_EN1          -1    // Real pin is needed to enable encoder's push button
+    #define BTN_EN2          -1    // functionality used by touch screen
+
+    #define DOGLCD_MOSI      -1  // Prevent auto-define by Conditionals_post.h
+    #define DOGLCD_SCK       -1
   #endif
 #endif
 
@@ -134,7 +146,7 @@
 #define MOTOR_CURRENT_PWM_Z_PIN    PA7
 #define MOTOR_CURRENT_PWM_E_PIN    PB0
 #define MOTOR_CURRENT_PWM_RANGE    1500 // (255 * (1000mA / 65535)) * 257 = 1000 is equal 1.6v Vref in turn equal 1Amp
-#define DEFAULT_PWM_MOTOR_CURRENT  { 1030, 1030, 1030 } // 1.05Amp per driver, here is XY, Z and E. This values determined empirically.
+#define DEFAULT_PWM_MOTOR_CURRENT  { 1000, 1000, 1000 } // 1.05Amp per driver, here is XY, Z and E. This values determined empirically.
 
 // This is a kind of workaround in case native marlin "digipot" interface won't work.
 // Required to enable related code in STM32F1/HAL.cpp
