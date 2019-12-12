@@ -10,46 +10,64 @@
 #define Y_DRIVER_TYPE  TMC2208
 #define Z_DRIVER_TYPE  TMC2208
 #define E0_DRIVER_TYPE TMC2208
-//#define E1_DRIVER_TYPE TMC2208
 
 //Sensor Mounts
 #if ENABLED(CUSTOM_PROBE)
   #define EZABL_ENABLE
 #endif
+#if ENABLED(SV01_OEM_MOUNT)
+  #define NOZZLE_TO_PROBE_OFFSET { 22, -50, 0 }
+  #define EZABL_ENABLE
+#endif
 #if ENABLED(CR10_VOLCANO)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 30
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 12
+  #define NOZZLE_TO_PROBE_OFFSET { 30, 12, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(CR10_V6HEAVYDUTY)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 63
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER 0
+  #define NOZZLE_TO_PROBE_OFFSET { 63, 0, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(CR10_OEM)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -44
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -10
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(TM3DAERO)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -51
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -7
+  #define NOZZLE_TO_PROBE_OFFSET { -51, -7, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(TM3DAERO_EXTENDED)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER -55
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -7
+  #define NOZZLE_TO_PROBE_OFFSET { -55, -7, 0 }
   #define EZABL_ENABLE
 #endif
 #if ENABLED(PETSFANG)
-  #define X_PROBE_OFFSET_FROM_EXTRUDER 48
-  #define Y_PROBE_OFFSET_FROM_EXTRUDER -2
+  #define NOZZLE_TO_PROBE_OFFSET { 48, -2, 0 }
   #define EZABL_ENABLE
 #endif
 
+#if ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5)
+  //S models assume that you have 2x motors and are using the dual adapter.
+  //So lets up the VREF on Z and reverse the Z axis when using the dual motor adapter
+  #define DUAL_Z_MOTORS
+
+  #define REVERSE_Z_MOTOR
+
+  #if ENABLED(CR10S)
+    #define CR10
+  #elif ENABLED(CR10S_MINI)
+    #define CR10_MINI
+  #elif ENABLED(CR10S_S4)
+    #define CR10_S4
+  #elif ENABLED(CR10S_S5)
+    #define CR10_S5
+  #endif
+#endif
+
 //CR-10 and Ender 3 Model Settings
-#if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(ENDER3) || ENABLED(ENDER5)
+#if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(ENDER3) || ENABLED(ENDER5) || ENABLED(SOVOL_SV01)
+  #define SERIAL_PORT -1
   #define BAUDRATE 115200
+  
+  #define EXTRUDERS 1
 
   #define CR10_STOCKDISPLAY
 
@@ -63,14 +81,22 @@
   #define Z_MAX_ENDSTOP_INVERTING false
   #define Z_MIN_PROBE_ENDSTOP_INVERTING false
 
-  #if ENABLED(TITAN_EXTRUDER)
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, TITAN_EXTRUDER_STEPS }
+  #if ENABLED(TMC_NATIVE_256_STEPPING)
+    #if ENABLED(CUSTOM_ESTEPS)
+  	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, CUSTOM_ESTEPS_VALUE }
+  	#elif ENABLED(SOVOL_SV01)
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, 382.14 }
+    #else
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, 95 }
+	  #endif
   #else
     #if ENABLED(CUSTOM_ESTEPS)
-	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
-	#else
+  	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+  	#elif ENABLED(SOVOL_SV01)
+      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 382.14 }
+    #else
       #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 95 }
-	#endif
+	  #endif
   #endif
 
   #define DEFAULT_MAX_FEEDRATE          { 200, 200, 30, 50 }
@@ -79,16 +105,6 @@
   #define DEFAULT_ACCELERATION          500
   #define DEFAULT_RETRACT_ACCELERATION  500
   #define DEFAULT_TRAVEL_ACCELERATION   500
-
-  #if ENABLED(CR10_S4) || ENABLED(CR10_S5)
-    #define DEFAULT_XJERK                 5.0
-    #define DEFAULT_YJERK                 5.0
-  #else
-    #define DEFAULT_XJERK                 7.0
-    #define DEFAULT_YJERK                 7.0
-  #endif
-  #define DEFAULT_ZJERK                  0.3
-  #define DEFAULT_EJERK                  5.0
 
   #if ENABLED(REVERSE_X_MOTOR)
     #define INVERT_X_DIR false
@@ -102,7 +118,7 @@
     #define INVERT_Y_DIR true
   #endif
 
-  #if ENABLED(ENDER5)
+  #if ENABLED(ENDER5) || ENABLED(SOVOL_SV01)
     #if ENABLED(REVERSE_Z_MOTOR)
       #define INVERT_Z_DIR false
     #else
@@ -116,14 +132,10 @@
     #endif
   #endif
 
-  #if ENABLED(TITAN_EXTRUDER)
+  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
     #define INVERT_E0_DIR false
   #else
-    #if ENABLED(REVERSE_E_MOTOR)
-      #define INVERT_E0_DIR false
-    #else
-      #define INVERT_E0_DIR true
-    #endif
+    #define INVERT_E0_DIR true
   #endif
 
   #ifndef MOTHERBOARD
@@ -171,6 +183,13 @@
     #define Z_MAX_POS 300
     #define PRINTER_VOLTAGE_24
   #endif
+
+  #if ENABLED(SOVOL_SV01)
+    #define X_BED_SIZE 280
+    #define Y_BED_SIZE 240
+    #define Z_MAX_POS 300
+    #define PRINTER_VOLTAGE_24
+  #endif
   
   #if ENABLED(CUSTOM_ZHEIGHT)
     #undef Z_MAX_POS
@@ -189,6 +208,7 @@
   #define ENCODER_STEPS_PER_MENU_ITEM 1
 
   #define PRINTER_ENABLED_CHECK
+  #define EZBOARD
 
 #endif //end CR-10
 
@@ -216,20 +236,13 @@
 
 #define STRING_CONFIG_H_AUTHOR "(TH3D)"
 #define SHOW_BOOTSCREEN
-#define STRING_SPLASH_LINE1 SHORT_BUILD_VERSION
-#define STRING_SPLASH_LINE2 WEBSITE_URL
 
 #define SHOW_CUSTOM_BOOTSCREEN
-//#define CUSTOM_STATUS_SCREEN_IMAGE
-
-//Fixes issues with XY not homing due to noisy endstop cables
-#define ENDSTOP_NOISE_THRESHOLD 2
-
-#define SERIAL_PORT -1
-
-#define EXTRUDERS 1
+#define CUSTOM_VERSION_FILE Version.h
 
 #define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
+
+#define ENDSTOP_NOISE_THRESHOLD 2
 
 #if ENABLED(EZBOARD_PT100)
   #define TEMP_SENSOR_0 20
@@ -248,7 +261,6 @@
 #define TEMP_SENSOR_4 0
 #define TEMP_SENSOR_5 0
 #define TEMP_SENSOR_CHAMBER 0
-#define HEATER_CHAMBER_PIN -1
 
 #if ENABLED(AC_BED)
   #define TEMP_SENSOR_BED 0
@@ -262,13 +274,13 @@
   #define TEMP_SENSOR_BED 5
 #endif
 
-#define TEMP_RESIDENCY_TIME 5
-#define TEMP_HYSTERESIS 3
-#define TEMP_WINDOW     1
+#define TEMP_RESIDENCY_TIME     5
+#define TEMP_HYSTERESIS         3
+#define TEMP_WINDOW             1
 
 #define TEMP_BED_RESIDENCY_TIME 5
-#define TEMP_BED_HYSTERESIS 3
-#define TEMP_BED_WINDOW     1
+#define TEMP_BED_HYSTERESIS     3
+#define TEMP_BED_WINDOW         1
 
 #define HEATER_0_MINTEMP 5
 #define HEATER_1_MINTEMP HEATER_0_MINTEMP
@@ -306,7 +318,6 @@
 #endif
 
 #define PIDTEMPBED
-
 #define MAX_BED_POWER 255
 
 #if ENABLED(PIDTEMPBED)
@@ -326,20 +337,6 @@
 
 #define THERMAL_PROTECTION_HOTENDS
 #define THERMAL_PROTECTION_BED
-
-/**
- * Endstop Noise Threshold
- *
- * Enable if your probe or endstops falsely trigger due to noise.
- *
- * - Higher values may affect repeatability or accuracy of some bed probes.
- * - To fix noise install a 100nF ceramic capacitor inline with the switch.
- * - This feature is not required for common micro-switches mounted on PCBs
- *   based on the Makerbot design, which already have the 100nF capacitor.
- *
- * :[2,3,4,5,6,7]
- */
-//#define ENDSTOP_NOISE_THRESHOLD 2
 
 #if ENABLED(ENDER5)
   #define USE_XMAX_PLUG
@@ -385,8 +382,6 @@
   #if DISABLED(BLTOUCH)
     #define FIX_MOUNTED_PROBE
   #endif
-
-  #define Z_PROBE_OFFSET_FROM_EXTRUDER 0
 
   #if ENABLED(PROBING_MOTORS_OFF)
     #define XY_PROBE_SPEED 8000
@@ -445,10 +440,10 @@
   #define GRID_MAX_POINTS_X EZABL_POINTS
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
-  #define LEFT_PROBE_BED_POSITION (max(EZABL_PROBE_EDGE, X_PROBE_OFFSET_FROM_EXTRUDER))
-  #define RIGHT_PROBE_BED_POSITION (min(X_BED_SIZE - EZABL_PROBE_EDGE, X_BED_SIZE + X_PROBE_OFFSET_FROM_EXTRUDER))
-  #define FRONT_PROBE_BED_POSITION (max(EZABL_PROBE_EDGE, Y_PROBE_OFFSET_FROM_EXTRUDER))
-  #define BACK_PROBE_BED_POSITION (min(Y_BED_SIZE - EZABL_PROBE_EDGE, Y_BED_SIZE + Y_PROBE_OFFSET_FROM_EXTRUDER))
+  #define MIN_PROBE_EDGE_LEFT EZABL_PROBE_EDGE
+  #define MIN_PROBE_EDGE_RIGHT EZABL_PROBE_EDGE
+  #define MIN_PROBE_EDGE_FRONT EZABL_PROBE_EDGE
+  #define MIN_PROBE_EDGE_BACK EZABL_PROBE_EDGE
 
   #define MIN_PROBE_EDGE 5
 
@@ -476,6 +471,28 @@
 #if DISABLED(S_CURVE_ACCELERATION_DISABLE)
   #define S_CURVE_ACCELERATION
 #endif
+
+#if ENABLED(JUNCTION_DEVIATION_DISABLE)
+  #define CLASSIC_JERK
+
+  #if ENABLED(CR10_S4) || ENABLED(CR10_S5)
+    #define DEFAULT_XJERK                 5.0
+    #define DEFAULT_YJERK                 5.0
+  #else
+    #define DEFAULT_XJERK                 7.0
+    #define DEFAULT_YJERK                 7.0
+  #endif
+  #define DEFAULT_ZJERK                   0.3
+
+  #define LIMITED_JERK_EDITING        // Limit edit via M205 or LCD to DEFAULT_aJERK * 2
+  #if ENABLED(LIMITED_JERK_EDITING)
+    #define MAX_JERK_EDIT_VALUES { 20, 20, 0.6, 10 } // ...or, set your own edit limits
+  #endif
+#else
+  #define JUNCTION_DEVIATION_MM 0.013 // (mm) Distance from real junction edge
+#endif
+
+#define DEFAULT_EJERK    5.0  // May be used by Linear Advance
 
 #define X_ENABLE_ON 0
 #define Y_ENABLE_ON 0
@@ -539,7 +556,6 @@
     #define FIL_RUNOUT_PULLUP
     #define FILAMENT_RUNOUT_SCRIPT "M600"
   #endif
-
 #endif
 
 #if ENABLED(MANUAL_MESH_LEVELING) && DISABLED(EZABL_ENABLE)
@@ -562,6 +578,7 @@
 
 #define EEPROM_SETTINGS
 #define EEPROM_CHITCHAT
+#define EEPROM_AUTO_INIT
 
 #define HOST_KEEPALIVE_FEATURE
 #define DEFAULT_KEEPALIVE_INTERVAL 2
@@ -597,7 +614,6 @@
 #define INDIVIDUAL_AXIS_HOMING_MENU
 
 #define LEVEL_BED_CORNERS
-
 #if ENABLED(LEVEL_BED_CORNERS)
   #define LEVEL_CORNERS_INSET 30
   #define LEVEL_CORNERS_Z_HOP 5.0
