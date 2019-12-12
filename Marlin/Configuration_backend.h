@@ -45,11 +45,15 @@
 #endif
 
 #if ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5)
-  //S models assume that you have 2x motors and are using the dual adapter.
-  //So lets up the VREF on Z and reverse the Z axis when using the dual motor adapter
+  //S models assume that you have 2x motors, filament sensor, and are using the dual adapter.
+  //So lets up the VREF on Z and reverse the Z axis when using the dual motor adapter and enable the filament sensor
   #define DUAL_Z_MOTORS
 
   #define REVERSE_Z_MOTOR
+  
+  #if DISABLED(EZOUTV2_ENABLE)
+    #define CR10S_STOCKFILAMENTSENSOR
+  #endif
 
   #if ENABLED(CR10S)
     #define CR10

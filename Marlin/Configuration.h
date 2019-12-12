@@ -53,7 +53,7 @@
 //#define CR10_S4
 //#define CR10_S5
 
-//CR-10S Series (Dual Z Motors) - Setting a "S" model here will automatically enable the reverse Z for use with the dual Z adapter and increase the Z vref.
+//CR-10S Series (Dual Z Motors) - Setting a "S" model here will automatically enable the reverse Z for use with the dual Z adapter, increase the Z vref, and enable the stock filament sensor. If you enable the EZOUTV2_ENABLE option it will take over the stock sensor option.
 //#define CR10S
 //#define CR10S_MINI
 //#define CR10S_S4
@@ -339,4 +339,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.11"
+#define UNIFIED_VERSION "TH3D U2.R1.12"
