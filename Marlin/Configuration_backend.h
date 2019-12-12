@@ -137,11 +137,19 @@
       #define INVERT_Z_DIR false
     #endif
   #endif
-
-  #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
-    #define INVERT_E0_DIR false
+  
+  #if ENABLED(SOVOL_SV01)
+    #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+      #define INVERT_E0_DIR true
+    #else
+      #define INVERT_E0_DIR false
+    #endif
   #else
-    #define INVERT_E0_DIR true
+    #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
+      #define INVERT_E0_DIR false
+    #else
+      #define INVERT_E0_DIR true
+    #endif
   #endif
 
   #ifndef MOTHERBOARD
