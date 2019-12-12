@@ -113,7 +113,6 @@
 // By default we have StealthChop2 Disabled for the E axis. This is due to the possibility of losing steps
 // due to the low torque nature of StealthChop2. If you want to quiet down the E motor you can uncomment the
 // below line. However, if you get lost steps and inconsistent extrusion then disable this option.
-// DO NOT USE STEALTHCHOP_E WHEN USING LINEAR ADVANCE.
 //#define STEALTHCHOP_E
 
 //===========================================================================
