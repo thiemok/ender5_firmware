@@ -98,6 +98,9 @@
 // If you are using a modded machine with a higher Z height use the below option to change the height. This value is in mm.
 //#define CUSTOM_ZHEIGHT 400
 
+// If you have the new Ender 5 or Ender 5 Pro Model that has the new 800steps/mm Z leadscrew uncomment the below option to set the correct steps/mm
+//#define ENDER5_NEW_LEADSCREW
+
 // Dual Z Motor Settings
 // When running dual Z motors uncomment the below line. This will increase the Z motor driver current for 2x motors.
 //#define DUAL_Z_MOTORS
@@ -339,4 +342,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.13a"
+#define UNIFIED_VERSION "TH3D U2.R1.14"
