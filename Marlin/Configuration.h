@@ -63,7 +63,7 @@
 //#define ENDER3
 //#define ENDER5
 
-//Sovol Machines - BETA SUPPORT
+//Sovol Machines
 //#define SOVOL_SV01
 
 // If you are using our EZOut Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header and uncomment the below line.
@@ -339,4 +339,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.12"
+#define UNIFIED_VERSION "TH3D U2.R1.13"
