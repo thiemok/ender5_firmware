@@ -53,7 +53,11 @@
     #define REVERSE_Z_MOTOR
   #endif
   
-  #if DISABLED(EZOUTV2_ENABLE)
+  #if ENABLED(SOVOL_SV01)
+    #define EZOUTV2_ENABLE
+  #endif
+  
+  #if DISABLED(EZOUTV2_ENABLE) 
     #define CR10S_STOCKFILAMENTSENSOR
   #endif
 

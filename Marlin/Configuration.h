@@ -66,10 +66,10 @@
 //Sovol Machines
 //#define SOVOL_SV01
 
-// If you are using our EZOut Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header and uncomment the below line.
+// If you are using our EZOut Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header and uncomment the below line. Sovol SV01 Stock Sensor uses the EZOUTV2_ENABLE as well.
 //#define EZOUTV2_ENABLE
 
-// If you are using the Stock Creality CR-10S or Sovol SV01 Sensor connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header and uncomment the below line. Enabling the SV01 or CR-10S Models will automatically enable this option for you.
+// If you are using the Stock Creality CR-10S connect to the FIL SENSOR header with the RED wire lined up with the "5V" marking by the header and uncomment the below line. Enabling the SV01 or CR-10S Models will automatically enable this option for you.
 //#define CR10S_STOCKFILAMENTSENSOR
 
 // EZABL Probe Mounts
@@ -339,4 +339,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.13"
+#define UNIFIED_VERSION "TH3D U2.R1.13a"
