@@ -136,7 +136,7 @@
 // You can do down to 10mm on the Wanhao i3 since it cannot print on the entire bed.
 // You can do down to 5mm on the Wanhao i3 Mini since it cannot print on the entire bed.
 // (only used if EZABL enabled)
-#define EZABL_PROBE_EDGE 35
+#define EZABL_PROBE_EDGE 40
 
 // If you have issues with your machine running the faster probe setting disable the #define EZABL_FASTPROBE below.
 // DO NOTE: Most machines will work with the fast probe enabled. Use M48 to verify accuracy.
@@ -248,8 +248,7 @@
 
 // BED SETTINGS ------------------------------------
 
-// If you want PID tuning on your bed you can enable the below line. But PID on a bed is not typically needed. By default BED PID is disabled.
-// This will be disabled when using automatic or manual mesh leveling with a 1284p board due to memory limitations.
+// If you want PID regulation on your bed you can enable the below line. But PID on a bed is not typically needed. By default BED PID is disabled.
 //#define PIDBED_ENABLE
 
 // If you are using an AC bed with a standalone controller (Keenovo) uncomment the below line to disable the heated bed in the firmware
@@ -342,4 +341,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.14a"
+#define UNIFIED_VERSION "TH3D U2.R1.15"

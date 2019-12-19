@@ -345,7 +345,9 @@
   #define  DEFAULT_Kd 114
 #endif
 
-#define PIDTEMPBED
+#if ENABLED(PIDBED_ENABLE)
+  #define PIDTEMPBED
+#endif
 #define MAX_BED_POWER 255
 
 #if ENABLED(PIDTEMPBED)
