@@ -460,7 +460,13 @@
   #endif
 
   #if AXIS_IS_TMC(Y)
-    #define Y_CURRENT     600
+    #if ENABLED(CR10_S5) || ENABLED(CR10S_S5)
+	  #define Y_CURRENT   800
+	#elif ENABLED(CR10_S4) || ENABLED(CR10S_S4)
+	  #define Y_CURRENT   700
+	#else
+	  #define Y_CURRENT   600
+    #endif
     #if ENABLED(TMC_NATIVE_256_STEPPING)
       #define Y_MICROSTEPS 256
     #else
