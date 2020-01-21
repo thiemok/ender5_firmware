@@ -51,6 +51,9 @@
 	#ifndef EZABL_PROBE_EDGE
 	  #define EZABL_PROBE_EDGE 35
 	#endif
+	#ifndef EZABL_POINTS
+	  #define EZABL_POINTS 5
+	#endif
 	#if DISABLED(CUSTOM_PROBE)
       #define NOZZLE_TO_PROBE_OFFSET { -44, -9, 0}
     #endif
