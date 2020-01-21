@@ -11,16 +11,6 @@
 #define Z_DRIVER_TYPE  TMC2208
 #define E0_DRIVER_TYPE TMC2208
 
-#if ENABLED(ENDER5_NEW_LEADSCREW) && ENABLED(TMC_NATIVE_256_STEPPING)
-  #define CREALITY_Z_STEPS 12800
-#elif DISABLED(ENDER5_NEW_LEADSCREW) && ENABLED(TMC_NATIVE_256_STEPPING)
-  #define CREALITY_Z_STEPS 6400
-#elif ENABLED(ENDER5_NEW_LEADSCREW) && DISABLED(TMC_NATIVE_256_STEPPING)
-  #define CREALITY_Z_STEPS 800
-#else
-  #define CREALITY_Z_STEPS 400
-#endif
-
 //Sensor Mounts
 #if ENABLED(CUSTOM_PROBE)
   #define EZABL_ENABLE
@@ -54,36 +44,21 @@
   #define EZABL_ENABLE
 #endif
 
-#if ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5) || ENABLED(SOVOL_SV01)
-  //S models assume that you have 2x motors, filament sensor, and are using the dual adapter.
-  //So lets up the VREF on Z and reverse the Z axis when using the dual motor adapter and enable the filament sensor
-  #define DUAL_Z_MOTORS
-
-  #if DISABLED(SOVOL_SV01)
-    #define REVERSE_Z_MOTOR
-  #endif
-  
-  #if ENABLED(SOVOL_SV01)
-    #define EZOUTV2_ENABLE
-  #endif
-  
-  #if DISABLED(EZOUTV2_ENABLE) 
-    #define CR10S_STOCKFILAMENTSENSOR
-  #endif
-
-  #if ENABLED(CR10S)
-    #define CR10
-  #elif ENABLED(CR10S_MINI)
-    #define CR10_MINI
-  #elif ENABLED(CR10S_S4)
-    #define CR10_S4
-  #elif ENABLED(CR10S_S5)
-    #define CR10_S5
+#if ENABLED(ENDER5_PLUS)
+  #if DISABLED(ENDER5_PLUS_NOABL) && DISABLED(ENDER5_PLUS_EZABL)
+    #define BLTOUCH
+	#define SERVO0_PIN P2_04
+	#if DISABLED(CUSTOM_PROBE)
+      #define NOZZLE_TO_PROBE_OFFSET { -44, -9, 0}
+    #endif
+  #endif  
+  #if DISABLED(ENDER5_PLUS_NOABL)
+	  #define EZABL_ENABLE
   #endif
 #endif
 
-//CR-10 and Ender 3 Model Settings
-#if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(ENDER3) || ENABLED(ENDER5) || ENABLED(SOVOL_SV01)
+//Creality and Sovol Settings
+#if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5) || ENABLED(ENDER3) || ENABLED(ENDER5) || ENABLED(ENDER5_PLUS) || ENABLED(SOVOL_SV01)
   #define SERIAL_PORT -1
   #define BAUDRATE 115200
   
@@ -92,6 +67,35 @@
   #define CR10_STOCKDISPLAY
 
   #define SQUARE_WAVE_STEPPING
+  
+  #if ENABLED(CR10S) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5) || ENABLED(SOVOL_SV01)
+    //S models assume that you have 2x motors, filament sensor, and are using the dual adapter.
+    //So lets up the VREF on Z and reverse the Z axis when using the dual motor adapter and enable the filament sensor
+	
+	#define DUAL_Z_MOTORS
+
+	#if ENABLED(REVERSE_Z_MOTOR)
+	  #undef REVERSE_Z_MOTOR
+	#else
+      #define REVERSE_Z_MOTOR
+    #endif
+  
+    #if ENABLED(SOVOL_SV01)
+      #define EZOUTV2_ENABLE
+    #endif
+  
+    #if DISABLED(EZOUTV2_ENABLE) 
+      #define CR10S_STOCKFILAMENTSENSOR
+    #endif
+
+    #if ENABLED(CR10S)
+      #define CR10
+    #elif ENABLED(CR10S_S4)
+      #define CR10_S4
+    #elif ENABLED(CR10S_S5)
+      #define CR10_S5
+    #endif
+  #endif
 
   #define X_MIN_ENDSTOP_INVERTING false
   #define Y_MIN_ENDSTOP_INVERTING false
@@ -101,25 +105,15 @@
   #define Z_MAX_ENDSTOP_INVERTING false
   #define Z_MIN_PROBE_ENDSTOP_INVERTING false
 
-  #if ENABLED(TMC_NATIVE_256_STEPPING)
-    #if ENABLED(CUSTOM_ESTEPS)
-  	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, CREALITY_Z_STEPS, CUSTOM_ESTEPS_VALUE }
-  	#elif ENABLED(SOVOL_SV01)
-      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, 6400, 402 }
-    #else
-      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 1280, 1280, CREALITY_Z_STEPS, 95 }
-	  #endif
+  #if ENABLED(CUSTOM_ESTEPS)
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
+  #elif ENABLED(SOVOL_SV01)
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 402 }
   #else
-    #if ENABLED(CUSTOM_ESTEPS)
-  	  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, CREALITY_Z_STEPS, CUSTOM_ESTEPS_VALUE }
-  	#elif ENABLED(SOVOL_SV01)
-      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 402 }
-    #else
-      #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, CREALITY_Z_STEPS, 95 }
-	  #endif
+    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 95 }
   #endif
 
-  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 30, 50 }
+  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 15, 50 }
   #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
 
   #define DEFAULT_ACCELERATION          500
@@ -138,7 +132,7 @@
     #define INVERT_Y_DIR true
   #endif
 
-  #if ENABLED(ENDER5) || ENABLED(SOVOL_SV01)
+  #if ENABLED(ENDER5)
     #if ENABLED(REVERSE_Z_MOTOR)
       #define INVERT_Z_DIR false
     #else
@@ -189,6 +183,7 @@
     #define Y_BED_SIZE 400
     #define Z_MAX_POS 400
     #define PRINTER_VOLTAGE_12
+	#define SLOWER_PROBE_MOVES
   #endif
 
   #if ENABLED(CR10_S5)
@@ -196,6 +191,7 @@
     #define Y_BED_SIZE 500
     #define Z_MAX_POS 500
     #define PRINTER_VOLTAGE_12
+	#define SLOWER_PROBE_MOVES
   #endif
 
   #if ENABLED(ENDER3)
@@ -210,6 +206,17 @@
     #define Y_BED_SIZE 220
     #define Z_MAX_POS 300
     #define PRINTER_VOLTAGE_24
+  #endif
+  
+  #if ENABLED(ENDER5_PLUS)
+    #define X_BED_SIZE 350
+    #define Y_BED_SIZE 350
+    #define Z_MAX_POS 400
+    #define PRINTER_VOLTAGE_24
+	#define REVERSE_ENCODER_DIRECTION
+	#define ENDER5_NEW_LEADSCREW
+    #define EZOUTV2_ENABLE
+    #define DUAL_Z_MOTORS
   #endif
 
   #if ENABLED(SOVOL_SV01)
@@ -278,7 +285,7 @@
   #define TEMP_SENSOR_0 5
 #elif ENABLED(KNOWN_HOTEND_THERMISTOR)
   #define TEMP_SENSOR_0 KNOWN_HOTEND_THERMISTOR_VALUE
-#elif ENABLED(TH3D_HOTEND_THERMISTOR) || ENABLED(TH3D_EZ300)
+#elif ENABLED(TH3D_HOTEND_THERMISTOR)
   #define TEMP_SENSOR_0 1
 #else
   #define TEMP_SENSOR_0 1
@@ -318,7 +325,12 @@
 #define HEATER_5_MINTEMP HEATER_0_MINTEMP
 #define BED_MINTEMP HEATER_0_MINTEMP
 
-#define HEATER_0_MAXTEMP 290
+#if ENABLED(HIGH_TEMP_THERMISTOR)
+  #define HEATER_0_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+#else
+  #define HEATER_0_MAXTEMP 290
+#endif
+
 #define HEATER_1_MAXTEMP HEATER_0_MAXTEMP
 #define HEATER_2_MAXTEMP HEATER_0_MAXTEMP
 #define HEATER_3_MAXTEMP HEATER_0_MAXTEMP
@@ -368,7 +380,7 @@
 #define THERMAL_PROTECTION_HOTENDS
 #define THERMAL_PROTECTION_BED
 
-#if ENABLED(ENDER5)
+#if ENABLED(ENDER5) || ENABLED(ENDER5_PLUS)
   #define USE_XMAX_PLUG
   #define USE_YMAX_PLUG
   #define USE_ZMIN_PLUG
@@ -398,12 +410,12 @@
 
 #define VALIDATE_HOMING_ENDSTOPS
 
-#if ENABLED(EZABL_SUPERFASTPROBE)
-  #define HOMING_FEEDRATE_Z  (30*60)
-#elif DISABLED(EZABL_FASTPROBE)
-  #define HOMING_FEEDRATE_Z  (4*60)
-#else
+#if ENABLED(EZABL_SUPERFASTPROBE) && DISABLED(BLTOUCH)
+  #define HOMING_FEEDRATE_Z  (15*60)
+#elif ENABLED(EZABL_FASTPROBE) && DISABLED(BLTOUCH)
   #define HOMING_FEEDRATE_Z  (8*60)
+#else
+  #define HOMING_FEEDRATE_Z  (4*60)
 #endif
 
 #if ENABLED(EZABL_ENABLE)
@@ -414,7 +426,7 @@
   #if ENABLED(PROBING_MOTORS_OFF)
     #define XY_PROBE_SPEED 8000
   #else
-    #if ENABLED(SLOWER_PROBE_MOVES) || ENABLED(TH3D_EZ300)
+    #if ENABLED(SLOWER_PROBE_MOVES)
       #define XY_PROBE_SPEED 8000
     #else
       #if ENABLED(EZABL_SUPERFASTPROBE)
@@ -542,7 +554,7 @@
 
 #define Z_HOMING_HEIGHT 5
 
-#if ENABLED(ENDER5)
+#if ENABLED(ENDER5) || ENABLED(ENDER5_PLUS)
   #define X_HOME_DIR 1
   #define Y_HOME_DIR 1
   #define Z_HOME_DIR -1

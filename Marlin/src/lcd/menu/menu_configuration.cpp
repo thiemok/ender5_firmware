@@ -388,17 +388,24 @@ void menu_configuration() {
 
   #if ENABLED(EEPROM_SETTINGS)
     ACTION_ITEM(MSG_STORE_EEPROM, lcd_store_settings);
-    if (!busy)
-      ACTION_ITEM(MSG_LOAD_EEPROM, lcd_load_settings);
+    //if (!busy)
+      //ACTION_ITEM(MSG_LOAD_EEPROM, lcd_load_settings);
   #endif
 
-  if (!busy)
-    ACTION_ITEM(MSG_RESTORE_FAILSAFE, []{
-      settings.reset();
-      #if HAS_BUZZER
-        ui.completion_feedback();
-      #endif
-    });
+  #if ENABLED(EEPROM_SETTINGS) && DISABLED(SLIM_LCD_MENUS)
+    CONFIRM_ITEM(MSG_INIT_EEPROM,
+    MSG_BUTTON_INIT, MSG_BUTTON_BACK,
+      []{
+        const bool inited = settings.init_eeprom();
+        #if HAS_BUZZER
+          ui.completion_feedback(inited);
+        #endif
+        UNUSED(inited);
+      },
+      ui.goto_previous_screen,
+      GET_TEXT(MSG_INIT_EEPROM), (PGM_P)nullptr, PSTR("?")
+    );
+  #endif
 
   END_MENU();
 }

@@ -34,16 +34,16 @@
   #define THERMAL_PROTECTION_PERIOD HOTEND_THERMAL_PROTECTION_TIME
   #define THERMAL_PROTECTION_HYSTERESIS 4
 
-  #define WATCH_TEMP_PERIOD HOTEND_THERMAL_PROTECTION_TIME
+  #define WATCH_TEMP_PERIOD (HOTEND_THERMAL_PROTECTION_TIME / 2)
   #define WATCH_TEMP_INCREASE 4
 #endif
 
 #if ENABLED(THERMAL_PROTECTION_BED)
-  #define THERMAL_PROTECTION_BED_PERIOD 20    // Seconds
-  #define THERMAL_PROTECTION_BED_HYSTERESIS 2 // Degrees Celsius
+  #define THERMAL_PROTECTION_BED_PERIOD (BED_THERMAL_PROTECTION_TIME / 2)
+  #define THERMAL_PROTECTION_BED_HYSTERESIS 2
 
-  #define WATCH_BED_TEMP_PERIOD 60                // Seconds
-  #define WATCH_BED_TEMP_INCREASE 2               // Degrees Celsius
+  #define WATCH_BED_TEMP_PERIOD BED_THERMAL_PROTECTION_TIME
+  #define WATCH_BED_TEMP_INCREASE 2
 #endif
 
 #if ENABLED(EZBOARD)
@@ -437,19 +437,11 @@
 #if HAS_TRINAMIC
 
   #define HOLD_MULTIPLIER    0.5  // Scales down the holding current from run current
-  #if ENABLED(TMC_NATIVE_256_STEPPING)
-    #define INTERPOLATE false
-  #else
-    #define INTERPOLATE true
-  #endif
+  #define INTERPOLATE true
 
   #if AXIS_IS_TMC(X)
     #define X_CURRENT      600  // (mA) RMS current. Multiply by 1.414 for peak current.
-    #if ENABLED(TMC_NATIVE_256_STEPPING)
-      #define X_MICROSTEPS 256
-    #else
-      #define X_MICROSTEPS 16
-    #endif
+    #define X_MICROSTEPS 16
     #define X_RSENSE     0.11
   #endif
 
@@ -467,11 +459,8 @@
 	#else
 	  #define Y_CURRENT   600
     #endif
-    #if ENABLED(TMC_NATIVE_256_STEPPING)
-      #define Y_MICROSTEPS 256
-    #else
-      #define Y_MICROSTEPS 16
-    #endif
+	
+    #define Y_MICROSTEPS 16
     #define Y_RSENSE     0.11
   #endif
 
@@ -487,11 +476,13 @@
     #else
       #define Z_CURRENT     700
     #endif
-    #if ENABLED(TMC_NATIVE_256_STEPPING)
-      #define Z_MICROSTEPS 256
+	
+    #if ENABLED(ENDER5_NEW_LEADSCREW)
+      #define Z_MICROSTEPS 8
     #else
       #define Z_MICROSTEPS 16
     #endif
+	
     #define Z_RSENSE     0.11
   #endif
 
@@ -570,6 +561,7 @@
   #else
     #define CHOPPER_TIMING CHOPPER_DEFAULT_24V
   #endif
+  
   #define MONITOR_DRIVER_STATUS
 
   #if ENABLED(MONITOR_DRIVER_STATUS)

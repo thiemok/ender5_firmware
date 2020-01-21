@@ -518,6 +518,10 @@ void menu_advanced_settings() {
   START_MENU();
   BACK_ITEM(MSG_CONFIGURATION);
 
+  #if HAS_TRINAMIC
+    SUBMENU(MSG_TMC_DRIVERS, menu_tmc);
+  #endif
+
   #if DISABLED(SLIM_LCD_MENUS)
 
     #if HAS_M206_COMMAND
@@ -557,10 +561,6 @@ void menu_advanced_settings() {
     SUBMENU(MSG_DRIVE_STRENGTH, menu_pwm);
   #endif
 
-  #if HAS_TRINAMIC
-    SUBMENU(MSG_TMC_DRIVERS, menu_tmc);
-  #endif
-
   #if SHOW_MENU_ADVANCED_TEMPERATURE
     SUBMENU(MSG_TEMPERATURE, menu_advanced_temperature);
   #endif
@@ -595,21 +595,6 @@ void menu_advanced_settings() {
       ui.return_to_status();
       if (new_state) LCD_MESSAGEPGM(MSG_RESET_PRINTER); else ui.reset_status();
     });
-  #endif
-
-  #if ENABLED(EEPROM_SETTINGS) && DISABLED(SLIM_LCD_MENUS)
-    CONFIRM_ITEM(MSG_INIT_EEPROM,
-      MSG_BUTTON_INIT, MSG_BUTTON_CANCEL,
-      []{
-        const bool inited = settings.init_eeprom();
-        #if HAS_BUZZER
-          ui.completion_feedback(inited);
-        #endif
-        UNUSED(inited);
-      },
-      ui.goto_previous_screen,
-      GET_TEXT(MSG_INIT_EEPROM), (PGM_P)nullptr, PSTR("?")
-    );
   #endif
 
   END_MENU();
