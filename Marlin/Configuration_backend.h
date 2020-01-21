@@ -48,6 +48,9 @@
   #if DISABLED(ENDER5_PLUS_NOABL) && DISABLED(ENDER5_PLUS_EZABL)
     #define BLTOUCH
 	#define SERVO0_PIN P2_04
+	#ifndef
+	  #define EZABL_PROBE_EDGE 35
+	#endif
 	#if DISABLED(CUSTOM_PROBE)
       #define NOZZLE_TO_PROBE_OFFSET { -44, -9, 0}
     #endif
