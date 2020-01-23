@@ -171,9 +171,6 @@
 // Does your machine make weird noises/vibrations when it is probing the mesh? Enable this to slow down the speed between probe points.
 //#define SLOWER_PROBE_MOVES
 
-// If you do not want to have the Zoffset combined with babystepping then uncomment the below line.
-//#define SEPARATE_BABYSTEPPING_FROM_ZOFFSET
-
 //================================================================================
 // IF YOU HAVE A CUSTOM PROBE MOUNT OR ONE THAT IS NOT PRE-SUPPORTED UNCOMMENT THE
 // CUSTOM_PROBE OPTION IN YOUR PRINTER SECTION AND ENTER YOUR PROBE LOCATION BELOW
@@ -208,7 +205,6 @@
 //===========================================================================
 
 // EXTRUDER SETTINGS -------------------------------
-
 // Use to set custom esteps and/or reverse your E Motor direction if you are installing an extruder that needs the direction reversed.
 // If you reversed the wiring on your E motor already (like the Bondtech Guide says to do) then you do not need to reverse it in the firmware here.
 
@@ -224,9 +220,16 @@
 // If you are using a pancake stepper enable the PANCAKE_STEPPER option to reduce the motor current to lower the stepper temperature
 //#define PANCAKE_STEPPER
 
+// FILAMENT SENSOR UNLOAD SETTINGS -----------------
+// If you have a filament sensor that is physically mounted to the machine you can enable MOUNTED_FILAMENT_SENSOR to set the unload length to 0 to prevent filament from backing up in the sensor by uncommenting MOUNTED_FILAMENT_SENSOR 
+//#define MOUNTED_FILAMENT_SENSOR
+
+// If you have a direct drive machine with a filament sensor uncomment DIRECT_DRIVE_PRINTER to decrease the unload length from 100mm to 20mm
+//#define DIRECT_DRIVE_PRINTER
+
 // THERMISTOR SETTINGS -----------------------------
 
-// If you are using an E3D V6 Hotend with their cartridge thermistor (not glass version) uncomment the below line.
+// If you are using an E3D V6 Hotend (or Hemera) with their cartridge thermistor (not glass version) uncomment the below line.
 //#define V6_HOTEND
 
 // If you are using a Tough Hotend from TH3D or any thermistors TH3D sells for your hotend uncomment the below line.
@@ -246,6 +249,8 @@
 // Setting this higher than 290C on a stock or traditional thermistor will damage it. Refer to your thermistor documentation to see what max temp is.
 //#define HIGH_TEMP_THERMISTOR
 #define HIGH_TEMP_THERMISTOR_TEMP 350
+
+// BED THERMISTOR SETTINGS -------------------------
 
 // If you are using a known bed thermistor value uncomment the below 2 lines and enter the thermistor number replacing the X after the #define KNOWN_BED_THERMISTOR_VALUE
 //#define KNOWN_BED_THERMISTOR
@@ -342,4 +347,4 @@
 
 #include "Configuration_backend.h"
 
-#define UNIFIED_VERSION "TH3D U2.R1.A2"
+#define UNIFIED_VERSION "TH3D U2.R1.A3"

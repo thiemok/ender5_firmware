@@ -223,6 +223,7 @@
 	#define ENDER5_NEW_LEADSCREW
     #define EZOUTV2_ENABLE
     #define DUAL_Z_MOTORS
+	#define MOUNTED_FILAMENT_SENSOR
   #endif
 
   #if ENABLED(SOVOL_SV01)
