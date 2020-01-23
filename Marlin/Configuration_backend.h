@@ -177,7 +177,7 @@
     #define PRINTER_VOLTAGE_12
   #endif
 
-  #if ENABLED(CR10_MINI)
+  #if ENABLED(CR10_MINI) || ENABLED(CR10S_MINI)
     #define X_BED_SIZE 300
     #define Y_BED_SIZE 220
     #define Z_MAX_POS 300
