@@ -475,9 +475,14 @@
 
   // If you are using a pre-configured hotend then you can use one of the value sets by uncommenting it
   // Creality Ender-5
-  #define DEFAULT_Kp 21.73
-  #define DEFAULT_Ki 1.54
-  #define DEFAULT_Kd 76.55
+  //#define DEFAULT_Kp 21.73
+  //#define DEFAULT_Ki 1.54
+  //#define DEFAULT_Kd 76.55
+
+  // E3D V6 with Ender5 parts
+  #define DEFAULT_Kp 29.41
+  #define DEFAULT_Ki 3.32
+  #define DEFAULT_Kd 65.04
 
   // Ultimaker
   //#define DEFAULT_Kp 22.2
@@ -722,7 +727,7 @@
  * Override with M92
  *                                      X, Y, Z, E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 93 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 99.20 }
 
 /**
  * Default Max Feed Rate (mm/s)
