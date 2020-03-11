@@ -233,7 +233,7 @@
     #define PRINTER_VOLTAGE_24
   #endif
   
-  #if ENABLED(CUSTOM_ZHEIGHT)
+  #if (CUSTOM_ZHEIGHT > Z_MAX_POS)
     #undef Z_MAX_POS
     #define Z_MAX_POS CUSTOM_ZHEIGHT
   #endif
