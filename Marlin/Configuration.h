@@ -61,7 +61,7 @@
 
 // Ender Series -------------------------------------------------------------
 //#define ENDER3
-//#define ENDER5
+#define ENDER5
 //#define ENDER5_PLUS
 
 // Sovol Machines -----------------------------------------------------------
@@ -344,6 +344,8 @@
  */
 
 #define LCD_LANGUAGE en
+
+#define FAN_MIN_PWM 128
 
 #include "Configuration_backend.h"
 
