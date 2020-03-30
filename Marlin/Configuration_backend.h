@@ -208,7 +208,7 @@
   #endif
 
   #if ENABLED(ENDER5)
-    #define X_BED_SIZE 220
+    #define X_BED_SIZE 210
     #define Y_BED_SIZE 205
     #define Z_MAX_POS 300
     #define PRINTER_VOLTAGE_24
