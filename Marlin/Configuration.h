@@ -142,11 +142,11 @@
 // If you want to change how far in or out the probe senses change EZABL_PROBE_EDGE value below
 // Most Machines - 35
 // Binder Clips? - 50
-#define EZABL_PROBE_EDGE 35
+#define EZABL_PROBE_EDGE 40
 
 // If you have issues with your machine running the faster probe setting disable the #define EZABL_FASTPROBE below.
 // NOTE: Most machines will work with the fast probe enabled. Use M48 to verify accuracy.
-#define EZABL_FASTPROBE
+//#define EZABL_FASTPROBE
 
 // Superfast probing - Only works with the EZABL Pro Sensors
 //#define EZABL_SUPERFASTPROBE
