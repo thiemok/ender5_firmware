@@ -1,348 +1,65 @@
 #pragma once
 
-#define CONFIGURATION_BACKEND_H_VERSION 020000
+#define CONFIGURATION_BACKEND_H_VERSION 020007
 
 //===========================================================================
 //======================= DO NOT MODIFY THIS FILE ===========================
 //===========================================================================
 
-#define X_DRIVER_TYPE  TMC2208
-#define Y_DRIVER_TYPE  TMC2208
-#define Z_DRIVER_TYPE  TMC2208
-#define E0_DRIVER_TYPE TMC2208
+#define UNIFIED_VERSION "TH3D UFW 2.26"
 
-//Sensor Mounts
-#if ENABLED(CUSTOM_PROBE)
-  #define EZABL_ENABLE
-#endif
-#if ENABLED(SV01_OEM_MOUNT)
-  #define NOZZLE_TO_PROBE_OFFSET { 22, -50, 0 }
-  #define EZABL_ENABLE
-#endif
-#if ENABLED(CR10_VOLCANO)
-  #define NOZZLE_TO_PROBE_OFFSET { 30, 12, 0 }
-  #define EZABL_ENABLE
-#endif
-#if ENABLED(CR10_V6HEAVYDUTY)
-  #define NOZZLE_TO_PROBE_OFFSET { 63, 0, 0 }
-  #define EZABL_ENABLE
-#endif
-#if ENABLED(CR10_OEM)
-  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
-  #define EZABL_ENABLE
-#endif
-#if ENABLED(TM3DAERO)
-  #define NOZZLE_TO_PROBE_OFFSET { -51, -7, 0 }
-  #define EZABL_ENABLE
-#endif
-#if ENABLED(TM3DAERO_EXTENDED)
-  #define NOZZLE_TO_PROBE_OFFSET { -55, -7, 0 }
-  #define EZABL_ENABLE
-#endif
-#if ENABLED(PETSFANG)
-  #define NOZZLE_TO_PROBE_OFFSET { 48, -2, 0 }
-  #define EZABL_ENABLE
+/**
+ * TH3D Sanity Checks
+ */
+
+#if ENABLED(ABL_ENABLE) && ENABLED(S_CURVE_ACCELERATION)
+  #error "S_CURVE_ACCELERATION is not compatible with ABL systems. Disable this and re-compile."
 #endif
 
-#if ENABLED(ENDER5_PLUS)
-  #if DISABLED(ENDER5_PLUS_NOABL) && DISABLED(ENDER5_PLUS_EZABL)
-    #define BLTOUCH
-	#define SERVO0_PIN P2_04
-	#ifndef EZABL_PROBE_EDGE
-	  #define EZABL_PROBE_EDGE 35
-	#endif
-	#ifndef EZABL_POINTS
-	  #define EZABL_POINTS 5
-	#endif
-	#if DISABLED(CUSTOM_PROBE)
-      #define NOZZLE_TO_PROBE_OFFSET { -44, -9, 0}
-    #endif
-  #endif  
-  #if DISABLED(ENDER5_PLUS_NOABL)
-	  #define EZABL_ENABLE
-  #endif
+#if ENABLED(BLTOUCH) && DISABLED(CUSTOM_PROBE)
+  #error "You must uncomment the CUSTOM_PROBE option in the EZABL probe mount section and then enter your mount offsets into the Custom Probe section."
 #endif
 
-//Creality and Sovol Settings
-#if ENABLED(CR10) || ENABLED(CR10_MINI) || ENABLED(CR10_S4) || ENABLED(CR10_S5) || ENABLED(CR10S) || ENABLED(CR10S_MINI) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5) || ENABLED(ENDER3) || ENABLED(ENDER5) || ENABLED(ENDER5_PLUS) || ENABLED(SOVOL_SV01)
-  #define SERIAL_PORT -1
-  #define BAUDRATE 115200
-  
-  #define EXTRUDERS 1
+/**
+ * Temp Settings
+ */
 
-  #define CR10_STOCKDISPLAY
+#define PREVENT_COLD_EXTRUSION
+#define EXTRUDE_MINTEMP 170
 
-  #define SQUARE_WAVE_STEPPING
-  
-  #if ENABLED(CR10S) || ENABLED(CR10S_S4) || ENABLED(CR10S_S5) || ENABLED(SOVOL_SV01)
-    //S models assume that you have 2x motors, filament sensor, and are using the dual adapter.
-    //So lets up the VREF on Z and reverse the Z axis when using the dual motor adapter and enable the filament sensor
-	
-	#define DUAL_Z_MOTORS
+#define DUMMY_THERMISTOR_998_VALUE 25
+#define DUMMY_THERMISTOR_999_VALUE 100
+#define MAX_REDUNDANT_TEMP_SENSOR_DIFF 10
 
-	#if ENABLED(REVERSE_Z_MOTOR)
-	  #undef REVERSE_Z_MOTOR
-	#else
-      #define REVERSE_Z_MOTOR
-    #endif
-  
-    #if ENABLED(SOVOL_SV01)
-      #define EZOUTV2_ENABLE
-    #endif
-  
-    #if DISABLED(EZOUTV2_ENABLE) 
-      #define CR10S_STOCKFILAMENTSENSOR
-    #endif
-
-    #if ENABLED(CR10S)
-      #define CR10
-    #elif ENABLED(CR10S_S4)
-      #define CR10_S4
-    #elif ENABLED(CR10S_S5)
-      #define CR10_S5
-    #endif
-  #endif
-
-  #define X_MIN_ENDSTOP_INVERTING false
-  #define Y_MIN_ENDSTOP_INVERTING false
-  #define Z_MIN_ENDSTOP_INVERTING false
-  #define X_MAX_ENDSTOP_INVERTING false
-  #define Y_MAX_ENDSTOP_INVERTING false
-  #define Z_MAX_ENDSTOP_INVERTING false
-  #define Z_MIN_PROBE_ENDSTOP_INVERTING false
-
-  #if ENABLED(CUSTOM_ESTEPS)
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, CUSTOM_ESTEPS_VALUE }
-  #elif ENABLED(SOVOL_SV01)
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 402 }
-  #else
-    #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 95 }
-  #endif
-
-  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 15, 50 }
-  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000, 500, 5000 }
-
-  #define DEFAULT_ACCELERATION          500
-  #define DEFAULT_RETRACT_ACCELERATION  500
-  #define DEFAULT_TRAVEL_ACCELERATION   500
-
-  #if ENABLED(REVERSE_X_MOTOR)
-    #define INVERT_X_DIR false
-  #else
-    #define INVERT_X_DIR true
-  #endif
-
-  #if ENABLED(REVERSE_Y_MOTOR)
-    #define INVERT_Y_DIR false
-  #else
-    #define INVERT_Y_DIR true
-  #endif
-
-  #if ENABLED(ENDER5)
-    #if ENABLED(REVERSE_Z_MOTOR)
-      #define INVERT_Z_DIR false
-    #else
-      #define INVERT_Z_DIR true
-    #endif
-  #else
-    #if ENABLED(REVERSE_Z_MOTOR)
-      #define INVERT_Z_DIR true
-    #else
-      #define INVERT_Z_DIR false
-    #endif
-  #endif
-  
-  #if ENABLED(SOVOL_SV01)
-    #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
-      #define INVERT_E0_DIR true
-    #else
-      #define INVERT_E0_DIR false
-    #endif
-  #else
-    #if ENABLED(REVERSE_E_MOTOR_DIRECTION)
-      #define INVERT_E0_DIR false
-    #else
-      #define INVERT_E0_DIR true
-    #endif
-  #endif
-
-  #ifndef MOTHERBOARD
-    #define MOTHERBOARD BOARD_TH3D_EZBOARD
-  #endif
-
-  #if ENABLED(CR10)
-    #define X_BED_SIZE 300
-    #define Y_BED_SIZE 300
-    #define Z_MAX_POS 400
-    #define PRINTER_VOLTAGE_12
-  #endif
-
-  #if ENABLED(CR10_MINI) || ENABLED(CR10S_MINI)
-    #define X_BED_SIZE 300
-    #define Y_BED_SIZE 220
-    #define Z_MAX_POS 300
-    #define PRINTER_VOLTAGE_12
-  #endif
-
-  #if ENABLED(CR10_S4)
-    #define X_BED_SIZE 400
-    #define Y_BED_SIZE 400
-    #define Z_MAX_POS 400
-    #define PRINTER_VOLTAGE_12
-	#define SLOWER_PROBE_MOVES
-  #endif
-
-  #if ENABLED(CR10_S5)
-    #define X_BED_SIZE 500
-    #define Y_BED_SIZE 500
-    #define Z_MAX_POS 500
-    #define PRINTER_VOLTAGE_12
-	#define SLOWER_PROBE_MOVES
-  #endif
-
-  #if ENABLED(ENDER3)
-    #define X_BED_SIZE 235
-    #define Y_BED_SIZE 235
-    #define Z_MAX_POS 250
-    #define PRINTER_VOLTAGE_24
-  #endif
-
-  #if ENABLED(ENDER5)
-    #define X_BED_SIZE 210
-    #define Y_BED_SIZE 205
-    #define Z_MAX_POS 300
-    #define PRINTER_VOLTAGE_24
-  #endif
-  
-  #if ENABLED(ENDER5_PLUS)
-    #define X_BED_SIZE 350
-    #define Y_BED_SIZE 350
-    #define Z_MAX_POS 400
-    #define PRINTER_VOLTAGE_24
-	#define REVERSE_ENCODER_DIRECTION
-	#define ENDER5_NEW_LEADSCREW
-    #define EZOUTV2_ENABLE
-    #define DUAL_Z_MOTORS
-	#define MOUNTED_FILAMENT_SENSOR
-  #endif
-
-  #if ENABLED(SOVOL_SV01)
-    #define X_BED_SIZE 280
-    #define Y_BED_SIZE 240
-    #define Z_MAX_POS 300
-    #define PRINTER_VOLTAGE_24
-  #endif
-  
-  #if (CUSTOM_ZHEIGHT > Z_MAX_POS)
-    #undef Z_MAX_POS
-    #define Z_MAX_POS CUSTOM_ZHEIGHT
-  #endif
-
-  #if ENABLED(HOME_ADJUST)
-    #define X_MIN_POS X_HOME_LOCATION
-    #define Y_MIN_POS Y_HOME_LOCATION
-  #else
-    #define X_MIN_POS 0
-    #define Y_MIN_POS 0
-  #endif
-
-  #define ENCODER_PULSES_PER_STEP 4
-  #define ENCODER_STEPS_PER_MENU_ITEM 1
-
-  #define PRINTER_ENABLED_CHECK
-  #define EZBOARD
-
-#endif //end CR-10
-
-//Machine Check
-#if DISABLED(PRINTER_ENABLED_CHECK)
-  #error "READ THIS: No printer uncommented in Configuration.h file. Please uncomment your printer and try again."
-#endif
-
-//Misc Settings
-#if DISABLED(TH3DINHOUSEMACHINE)
-  #if defined(USER_PRINTER_NAME)
-    #define CUSTOM_MACHINE_NAME USER_PRINTER_NAME
-  #else
-    #if ENABLED(BLTOUCH)
-      #define CUSTOM_MACHINE_NAME "TH3D BLTouch"
-    #elif ENABLED(EZABL_ENABLE)
-      #define CUSTOM_MACHINE_NAME "TH3D EZABL"
-    #elif ENABLED(EZOUT_ENABLE)
-      #define CUSTOM_MACHINE_NAME "TH3D EZOut"
-    #else
-      #define CUSTOM_MACHINE_NAME SHORT_BUILD_VERSION
-    #endif
-  #endif
-#endif
-
-#define STRING_CONFIG_H_AUTHOR "(TH3D)"
-#define SHOW_BOOTSCREEN
-
-#define SHOW_CUSTOM_BOOTSCREEN
-#define CUSTOM_VERSION_FILE Version.h
-
-#define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
-
-#define ENDSTOP_NOISE_THRESHOLD 2
-
-#if ENABLED(EZBOARD_PT100)
-  #define TEMP_SENSOR_0 20
-#elif ENABLED(V6_HOTEND)
-  #define TEMP_SENSOR_0 5
-#elif ENABLED(KNOWN_HOTEND_THERMISTOR)
-  #define TEMP_SENSOR_0 KNOWN_HOTEND_THERMISTOR_VALUE
-#elif ENABLED(TH3D_HOTEND_THERMISTOR)
-  #define TEMP_SENSOR_0 1
-#else
-  #define TEMP_SENSOR_0 1
-#endif
-
-#define TEMP_SENSOR_2 0
-#define TEMP_SENSOR_3 0
-#define TEMP_SENSOR_4 0
-#define TEMP_SENSOR_5 0
-#define TEMP_SENSOR_CHAMBER 0
-
-#if ENABLED(AC_BED)
-  #define TEMP_SENSOR_BED 0
-#elif ENABLED(KNOWN_BED_THERMISTOR)
-  #define TEMP_SENSOR_BED KNOWN_BED_THERMISTOR_VALUE
-#elif ENABLED(TH3D_BED_THERMISTOR)
-  #define TEMP_SENSOR_BED 1
-#elif ENABLED(KEENOVO_TEMPSENSOR)
-  #define TEMP_SENSOR_BED 11
-#else
-  #define TEMP_SENSOR_BED 5
-#endif
-
-#define TEMP_RESIDENCY_TIME     5
-#define TEMP_HYSTERESIS         3
-#define TEMP_WINDOW             1
-
-#define TEMP_BED_RESIDENCY_TIME 5
-#define TEMP_BED_HYSTERESIS     3
-#define TEMP_BED_WINDOW         1
-
-#define HEATER_0_MINTEMP 5
-#define HEATER_1_MINTEMP HEATER_0_MINTEMP
-#define HEATER_2_MINTEMP HEATER_0_MINTEMP
-#define HEATER_3_MINTEMP HEATER_0_MINTEMP
-#define HEATER_4_MINTEMP HEATER_0_MINTEMP
-#define HEATER_5_MINTEMP HEATER_0_MINTEMP
-#define BED_MINTEMP HEATER_0_MINTEMP
+#define HEATER_0_MINTEMP   0
+#define HEATER_1_MINTEMP   HEATER_0_MINTEMP
+#define HEATER_2_MINTEMP   HEATER_0_MINTEMP
+#define HEATER_3_MINTEMP   HEATER_0_MINTEMP
+#define HEATER_4_MINTEMP   HEATER_0_MINTEMP
+#define HEATER_5_MINTEMP   HEATER_0_MINTEMP
+#define HEATER_6_MINTEMP   HEATER_0_MINTEMP
+#define HEATER_7_MINTEMP   HEATER_0_MINTEMP
+#define BED_MINTEMP        HEATER_0_MINTEMP
 
 #if ENABLED(HIGH_TEMP_THERMISTOR)
   #define HEATER_0_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+  #define HEATER_1_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+  #define HEATER_2_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+  #define HEATER_3_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+  #define HEATER_4_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+  #define HEATER_5_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+  #define HEATER_6_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
+  #define HEATER_7_MAXTEMP HIGH_TEMP_THERMISTOR_TEMP
 #else
-  #define HEATER_0_MAXTEMP 290
+  #define HEATER_0_MAXTEMP 275
+  #define HEATER_1_MAXTEMP HEATER_0_MAXTEMP
+  #define HEATER_2_MAXTEMP HEATER_0_MAXTEMP
+  #define HEATER_3_MAXTEMP HEATER_0_MAXTEMP
+  #define HEATER_4_MAXTEMP HEATER_0_MAXTEMP
+  #define HEATER_5_MAXTEMP HEATER_0_MAXTEMP
+  #define HEATER_6_MAXTEMP HEATER_0_MAXTEMP
+  #define HEATER_7_MAXTEMP HEATER_0_MAXTEMP
 #endif
-
-#define HEATER_1_MAXTEMP HEATER_0_MAXTEMP
-#define HEATER_2_MAXTEMP HEATER_0_MAXTEMP
-#define HEATER_3_MAXTEMP HEATER_0_MAXTEMP
-#define HEATER_4_MAXTEMP HEATER_0_MAXTEMP
-#define HEATER_5_MAXTEMP HEATER_0_MAXTEMP
 
 #if ENABLED(BED_HIGHTEMP)
   #define BED_MAXTEMP 150
@@ -350,236 +67,437 @@
   #define BED_MAXTEMP 120
 #endif
 
+#define TEMP_RESIDENCY_TIME      3
+#define TEMP_WINDOW              1
+#define TEMP_HYSTERESIS          3
+
+#define TEMP_BED_RESIDENCY_TIME  3
+#define TEMP_BED_WINDOW          1
+#define TEMP_BED_HYSTERESIS      3
+
+// PID Settings
 #define PIDTEMP
 #define BANG_MAX 255
 #define PID_MAX BANG_MAX
 #define PID_K1 0.95
 
-#if ENABLED(PIDTEMP)
+#define PID_AUTOTUNE_MENU
+
+#if DISABLED(SPACE_SAVER) && DISABLED(SKR_E3_MINI_BOARD)
   #define PID_EDIT_MENU
-  #define PID_AUTOTUNE_MENU
-  #define PID_FUNCTIONAL_RANGE 10
-  #define  DEFAULT_Kp 22.2
-  #define  DEFAULT_Ki 1.08
-  #define  DEFAULT_Kd 114
 #endif
 
-#if ENABLED(PIDBED_ENABLE)
+#ifndef DEFAULT_Kp
+  #define DEFAULT_Kp 22.2 // Define Marlin default PID if no machine specific PID is defined.
+  #define DEFAULT_Ki 1.08
+  #define DEFAULT_Kd 114
+#endif
+
+#if ENABLED(ENABLE_PIDBED) // PID Bed is not needed. Bang Bang loop is set to 500ms
   #define PIDTEMPBED
-#endif
-#define MAX_BED_POWER 255
-
-#if ENABLED(PIDTEMPBED)
-  #define  DEFAULT_bedKp 690.34
-  #define  DEFAULT_bedKi 111.47
-  #define  DEFAULT_bedKd 1068.83
-#endif
-
-#if DISABLED(NO_COLD_PREVENT)
-  #define PREVENT_COLD_EXTRUSION
+  #define MAX_BED_POWER 255
+  #if ENABLED(PIDTEMPBED)
+    #ifndef DEFAULT_bedKp
+      #define  DEFAULT_bedKp 113.36
+      #define  DEFAULT_bedKi 21.62
+      #define  DEFAULT_bedKd 148.59
+    #endif
+  #endif
 #endif
 
-#define EXTRUDE_MINTEMP 170
+#if EITHER(PIDTEMP, PIDTEMPBED)
+  #define PID_FUNCTIONAL_RANGE 10
+#endif
+// End PID Settings
 
-#define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 1000
-
+// Enable Thermal Protection for Bed and Hotends
 #define THERMAL_PROTECTION_HOTENDS
 #define THERMAL_PROTECTION_BED
 
-#if ENABLED(ENDER5) || ENABLED(ENDER5_PLUS)
-  #define USE_XMAX_PLUG
-  #define USE_YMAX_PLUG
-  #define USE_ZMIN_PLUG
-#else
-  #define USE_XMIN_PLUG
-  #define USE_YMIN_PLUG
-  #define USE_ZMIN_PLUG
+/**
+ * ABL Probe Settings
+ */
+
+#if ENABLED(CUSTOM_PROBE)
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ENDER6_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -40, -14, 0 }
+#endif
+#if ENABLED(ENDER3_MAX_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { 57, -9, 0 }
+#endif
+#if ENABLED(KP3S_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { 37, -3, 0 }
+#endif
+#if ENABLED(ANET_A2_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -33, -22, 0 }
+#endif
+#if ENABLED(ANET_A6_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -1, -54, 0 }
+#endif
+#if ENABLED(ANET_A8_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -26, -40, 0 }
+#endif
+#if ENABLED(ANET_A8_PLUS_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -24, -45, 0 }
+#endif
+#if ENABLED(ANET_E10_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -38, -12, 0 }
+#endif
+#if ENABLED(ANET_E12_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -38, -12, 0 }
+#endif
+#if ENABLED(ANET_E16_OEM_MOUNT)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -38, -12, 0 }
+#endif
+#if ENABLED(SUNLU_S8_5015_EZABL)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -47, -11, 0 }
+#endif
+#if ENABLED(AC_MEGA_ZERO_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -52, -19, 0 }
+#endif
+#if ENABLED(SUNLU_S8_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -53, -12, 0 }
+#endif
+#if ENABLED(KP3_OEM_MOUNT)
+  #define NOZZLE_TO_PROBE_OFFSET { -46, -15, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ENDER3_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
+#endif
+#if ENABLED(ENDER5_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
+#endif
+#if ENABLED(CR10_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
+#endif
+#if ENABLED(CR10S_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
+#endif
+#if ENABLED(ENDER5_PLUS_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
+#endif
+#if ENABLED(CR20_OEM)
+  #define ABL_ENABLE
+  #define NOZZLE_TO_PROBE_OFFSET { -44, -10, 0 }
+#endif
+#if ENABLED(ENDER3_V2_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -48, -15, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(SV01_OEM_MOUNT)
+  #define NOZZLE_TO_PROBE_OFFSET { 22, -50, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(CR10_VOLCANO)
+  #define NOZZLE_TO_PROBE_OFFSET { 30, 12, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(TORNADO_VOLCANO)
+  #define NOZZLE_TO_PROBE_OFFSET { 30, 12, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(CR10_V6HEAVYDUTY)
+  #define NOZZLE_TO_PROBE_OFFSET { 63, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(TORNADO_V6HEAVYDUTY)
+  #define NOZZLE_TO_PROBE_OFFSET { 63, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(TM3DAERO)
+  #define NOZZLE_TO_PROBE_OFFSET { -51, -7, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(TM3DAERO_EXTENDED)
+  #define NOZZLE_TO_PROBE_OFFSET { -55, -7, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(PETSFANG)
+  #define NOZZLE_TO_PROBE_OFFSET { 48, -2, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ENDER2_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -33, -10, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ENDER2_V6)
+  #define NOZZLE_TO_PROBE_OFFSET { -35, -2, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(CR10V2_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { 52, 5, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(SIDEWINDER_X1_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { 33, -39, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(CR10S_PRO_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -27, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(CRX_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -5, -48, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ZONESTAR_Z5F_STOCK_ABL)
+  #define NOZZLE_TO_PROBE_OFFSET { 35, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(TARANTULA_PRO_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -65, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(TORNADO_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -37, -10, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(TAZ5_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -52, 15, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(WANHAO_I3_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -25, -38, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(WANHAO_D6_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { 24, -16, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(WANHAO_I3_DIIICOOLER)
+  #define NOZZLE_TO_PROBE_OFFSET { -36, -37, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(WANHAO_I3MINI_OEM_EZABLMINI)
+  #define NOZZLE_TO_PROBE_OFFSET { -32, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(WANHAO_I3MINI_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -36, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ALFAWISEU10_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { 39, -47, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ALFAWISEU10_PETSFANG)
+  #define NOZZLE_TO_PROBE_OFFSET { -48, -2, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ENDER4_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -53, -19, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(ADIM_I3P_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { 33, -60, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(GEE_A10_V1_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -54, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(GEE_A10_V2_OEM)
+  #define NOZZLE_TO_PROBE_OFFSET { -52, 0, 0 }
+  #define ABL_ENABLE
+#endif
+#if ENABLED(EZ300_OEM_MOUNT)
+  #define NOZZLE_TO_PROBE_OFFSET { -32, -8, 0 }
+  #define ABL_ENABLE
 #endif
 
-// Board has physical pullups. Disable CPU built in pullups.
-//#define ENDSTOPPULLUPS
-
-#if ENABLED(V3_EZABL_ON_SERVO)
-  #define ENDSTOPPULLUP_ZMIN
-  #define ENDSTOPPULLUP_ZMIN_PROBE
-#endif
-
-#define BUSY_WHILE_HEATING
-
-#define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
-
-#if ENABLED(SLOWER_HOMING)
-  #define HOMING_FEEDRATE_XY (20*60)
-#else
-  #define HOMING_FEEDRATE_XY (40*60)
-#endif
-
-#define VALIDATE_HOMING_ENDSTOPS
-
-#if ENABLED(EZABL_SUPERFASTPROBE) && DISABLED(BLTOUCH)
-  #define HOMING_FEEDRATE_Z  (15*60)
-#elif ENABLED(EZABL_FASTPROBE) && DISABLED(BLTOUCH)
-  #define HOMING_FEEDRATE_Z  (8*60)
-#else
-  #define HOMING_FEEDRATE_Z  (4*60)
-#endif
-
-#if ENABLED(EZABL_ENABLE)
+#if ENABLED(ABL_ENABLE)
+  #define SEGMENT_LEVELED_MOVES
+  #define LEVELED_SEGMENT_LENGTH 5.0
+  
+  #undef Z_PROBE_OFFSET_RANGE_MIN
+  #define Z_PROBE_OFFSET_RANGE_MIN    -5
+  #undef Z_PROBE_OFFSET_RANGE_MAX
+  #define Z_PROBE_OFFSET_RANGE_MAX     1
+  
+  #define Z_MIN_PROBE_REPEATABILITY_TEST
+  #define Z_AFTER_HOMING               5
+  #define Z_PROBE_LOW_POINT           -10
+  
   #if DISABLED(BLTOUCH)
     #define FIX_MOUNTED_PROBE
   #endif
-
-  #if ENABLED(PROBING_MOTORS_OFF)
-    #define XY_PROBE_SPEED 8000
+  
+  #if ENABLED(SLOWER_PROBE_MOVES) || ENABLED(PROBING_STEPPERS_OFF)
+    #define XY_PROBE_SPEED (133*60)
   #else
-    #if ENABLED(SLOWER_PROBE_MOVES)
-      #define XY_PROBE_SPEED 8000
+    #if ENABLED(EZABL_SUPERFASTPROBE)
+      #define XY_PROBE_SPEED (266*60)
     #else
-      #if ENABLED(EZABL_SUPERFASTPROBE)
-        #define XY_PROBE_SPEED 16000
-      #else
-        #define XY_PROBE_SPEED 12000
-      #endif
+      #define XY_PROBE_SPEED (200*60)
     #endif
   #endif
-
-  #define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
-  #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
-
-  #if (ENABLED(FIX_MOUNTED_PROBE) || ENABLED(BLTOUCH)) && DISABLED(HEATERS_ON_DURING_PROBING)
-    #define PROBING_HEATERS_OFF
+  
+  #define PROBING_MARGIN EZABL_PROBE_EDGE
+  
+  #if ENABLED(FIX_MOUNTED_PROBE) && DISABLED(HEATERS_ON_DURING_PROBING)
+    #define PROBING_HEATERS_OFF   
   #endif
-
-  #if ENABLED(EZABL_SUPERFASTPROBE)
-    #define MULTIPLE_PROBING 3
-  #else
-    #define MULTIPLE_PROBING 2
-  #endif
-
-  #if ENABLED(BLTOUCH)
-    #define Z_CLEARANCE_DEPLOY_PROBE   15
-    #define Z_CLEARANCE_BETWEEN_PROBES 10
-	#define Z_CLEARANCE_MULTI_PROBE    10
-    #define ENDSTOPPULLUP_ZMIN
-    #define ENDSTOPPULLUP_ZMIN_PROBE
-  #elif ENABLED(EZABL_SUPERFASTPROBE)
-    #define Z_CLEARANCE_DEPLOY_PROBE   1
-    #define Z_CLEARANCE_BETWEEN_PROBES 2
-    #define Z_CLEARANCE_MULTI_PROBE    1
-  #else
-    #define Z_CLEARANCE_DEPLOY_PROBE   5
-    #define Z_CLEARANCE_BETWEEN_PROBES 3
-	#define Z_CLEARANCE_MULTI_PROBE    3
-  #endif
-
-  #define Z_PROBE_OFFSET_RANGE_MIN  -5
-  #define Z_PROBE_OFFSET_RANGE_MAX  1
-
-  #define Z_MIN_PROBE_REPEATABILITY_TEST
-  #define Z_AFTER_PROBING           5
-  #define Z_PROBE_LOW_POINT         -3
-
+  
+  #define MULTIPLE_PROBING 2
   #define AUTO_BED_LEVELING_BILINEAR
-
-  #define Z_SAFE_HOMING
-
+  #define ENABLE_LEVELING_FADE_HEIGHT
   #define GRID_MAX_POINTS_X EZABL_POINTS
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
-
-  #define MIN_PROBE_EDGE_LEFT EZABL_PROBE_EDGE
-  #define MIN_PROBE_EDGE_RIGHT EZABL_PROBE_EDGE
-  #define MIN_PROBE_EDGE_FRONT EZABL_PROBE_EDGE
-  #define MIN_PROBE_EDGE_BACK EZABL_PROBE_EDGE
-
-  #define MIN_PROBE_EDGE 5
-
-  #define Z_SAFE_HOMING_X_POINT ((X_BED_SIZE) / 2)
-  #define Z_SAFE_HOMING_Y_POINT ((Y_BED_SIZE) / 2)
-
-  #if ENABLED(EZABL_OUTSIDE_GRID_COMPENSATION)
-    #define EXTRAPOLATE_BEYOND_GRID
+  #define Z_SAFE_HOMING
+  
+  #if ENABLED(Z_SAFE_HOMING)
+    #define Z_SAFE_HOMING_X_POINT X_CENTER  // X point for Z homing
+    #define Z_SAFE_HOMING_Y_POINT Y_CENTER  // Y point for Z homing
   #endif
-
-  #if ENABLED(FIX_MOUNTED_PROBE)
+  
+  // ABL Probe Logic Settings
+  #if ENABLED(BLTOUCH) // BLTouch uses false
+    #undef Z_MIN_PROBE_ENDSTOP_INVERTING
+    #define Z_MIN_PROBE_ENDSTOP_INVERTING false
+    #undef Z_MIN_ENDSTOP_INVERTING
+    #define Z_MIN_ENDSTOP_INVERTING false
+  #elif ENABLED(CR10S_PRO_STOCK_ABL) && ENABLED(CR10S_PRO)
+    #undef Z_MIN_PROBE_ENDSTOP_INVERTING
+    #define Z_MIN_PROBE_ENDSTOP_INVERTING false
+    #undef Z_MIN_ENDSTOP_INVERTING
+    #define Z_MIN_ENDSTOP_INVERTING false
+  #else                // EZABL uses true
     #undef Z_MIN_PROBE_ENDSTOP_INVERTING
     #define Z_MIN_PROBE_ENDSTOP_INVERTING true
     #undef Z_MIN_ENDSTOP_INVERTING
     #define Z_MIN_ENDSTOP_INVERTING true
   #endif
-  #if ENABLED(BLTOUCH)
-    #undef Z_MIN_PROBE_ENDSTOP_INVERTING
-    #define Z_MIN_PROBE_ENDSTOP_INVERTING false
-    #undef Z_MIN_ENDSTOP_INVERTING
-    #define Z_MIN_ENDSTOP_INVERTING false
-  #endif
+
 #endif
 
-#if DISABLED(S_CURVE_ACCELERATION_DISABLE)
-  #define S_CURVE_ACCELERATION
-#endif
+/**
+ * General Firmware Settings
+ */
 
-#if ENABLED(JUNCTION_DEVIATION_DISABLE)
-  #define CLASSIC_JERK
+#define STRING_CONFIG_H_AUTHOR "TH3D Studio"
+#define CUSTOM_VERSION_FILE Version.h
 
-  #if ENABLED(CR10_S4) || ENABLED(CR10_S5)
-    #define DEFAULT_XJERK                 5.0
-    #define DEFAULT_YJERK                 5.0
+#if ENABLED(CUSTOM_PRINTER_NAME)
+  #define CUSTOM_MACHINE_NAME USER_PRINTER_NAME
+#else
+  #if ENABLED(EZBOARD_DIY)
+    #define CUSTOM_MACHINE_NAME "EZBoard DIY"
+  #elif ENABLED(BLTOUCH)
+    #define CUSTOM_MACHINE_NAME "TH3D BLTouch"
+  #elif ENABLED(ABL_ENABLE) && DISABLED(BLTOUCH)
+    #define CUSTOM_MACHINE_NAME "TH3D EZABL"
+  #elif ENABLED(EZOUT_ENABLE)
+    #define CUSTOM_MACHINE_NAME "TH3D EZOut"
+  #elif ENABLED(CR10S_PRO_STOCK_ABL) && ENABLED(CR10S_PRO)
+    #define CUSTOM_MACHINE_NAME "CR-10S Pro"
   #else
-    #define DEFAULT_XJERK                 7.0
-    #define DEFAULT_YJERK                 7.0
+    #define CUSTOM_MACHINE_NAME SHORT_BUILD_VERSION
   #endif
-  #define DEFAULT_ZJERK                   0.3
-
-  #define LIMITED_JERK_EDITING        // Limit edit via M205 or LCD to DEFAULT_aJERK * 2
-  #if ENABLED(LIMITED_JERK_EDITING)
-    #define MAX_JERK_EDIT_VALUES { 20, 20, 0.6, 10 } // ...or, set your own edit limits
-  #endif
-#else
-  #define JUNCTION_DEVIATION_MM 0.013 // (mm) Distance from real junction edge
 #endif
 
-#define DEFAULT_EJERK    5.0  // May be used by Linear Advance
-
-#define X_ENABLE_ON 0
-#define Y_ENABLE_ON 0
-#define Z_ENABLE_ON 0
-#define E_ENABLE_ON 0
-
-#define DISABLE_X false
-#define DISABLE_Y false
-#define DISABLE_Z false
-
-#define DISABLE_E false
-#define DISABLE_INACTIVE_EXTRUDER true
-
-#define INVERT_E1_DIR false
-#define INVERT_E2_DIR false
-#define INVERT_E3_DIR false
-#define INVERT_E4_DIR false
-#define INVERT_E5_DIR false
-
-#define Z_HOMING_HEIGHT 5
-
-#if ENABLED(ENDER5) || ENABLED(ENDER5_PLUS)
-  #define X_HOME_DIR 1
-  #define Y_HOME_DIR 1
-  #define Z_HOME_DIR -1
+#define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
+#if ENABLED(SLOWER_HOMING)
+  #define HOMING_FEEDRATE_XY (20*60)
 #else
-  #define X_HOME_DIR -1
-  #define Y_HOME_DIR -1
-  #define Z_HOME_DIR -1
+  #define HOMING_FEEDRATE_XY (50*60)
 #endif
 
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
+#define VALIDATE_HOMING_ENDSTOPS
+#define PRINTJOB_TIMER_AUTOSTART
+
+#if DISABLED(NO_SDCARD)
+  #define SDSUPPORT
+#endif
+
+#if DISABLED(SPEAKER_KILL)
+  #define SPEAKER
+#endif
+
+#if ENABLED(FAN_FIX)
+  #define FAN_SOFT_PWM
+  #define SOFT_PWM_SCALE 1
+#else
+  #define SOFT_PWM_SCALE 0
+#endif
+
+#if ENABLED(EZABL_SUPERFASTPROBE) && ENABLED(ABL_ENABLE) && DISABLED(BLTOUCH)
+  #define HOMING_FEEDRATE_Z  (15*60)
+#elif ENABLED(EZABL_FASTPROBE) && ENABLED(ABL_ENABLE)
+  #define HOMING_FEEDRATE_Z  (8*60)
+#else
+  #define HOMING_FEEDRATE_Z  (5*60)
+#endif
+
+#define Z_PROBE_SPEED_FAST HOMING_FEEDRATE_Z
+
+#if ENABLED(BLTOUCH)
+  #define Z_CLEARANCE_DEPLOY_PROBE   8
+  #define Z_CLEARANCE_BETWEEN_PROBES 5
+  #define Z_CLEARANCE_MULTI_PROBE    5
+  #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
+  #define ENDSTOPPULLUP_ZMIN
+  #define ENDSTOPPULLUP_ZMIN_PROBE
+#elif ENABLED(EZABL_SUPERFASTPROBE) && ENABLED(ABL_ENABLE)
+  #define Z_CLEARANCE_DEPLOY_PROBE   2
+  #define Z_CLEARANCE_BETWEEN_PROBES 2
+  #define Z_CLEARANCE_MULTI_PROBE    2
+  #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 1.5)
+#else
+  #define Z_CLEARANCE_DEPLOY_PROBE   5
+  #define Z_CLEARANCE_BETWEEN_PROBES 3
+  #define Z_CLEARANCE_MULTI_PROBE    3
+  #define Z_PROBE_SPEED_SLOW (Z_PROBE_SPEED_FAST / 2)
+#endif
+
+#define HOST_KEEPALIVE_FEATURE
+#define DEFAULT_KEEPALIVE_INTERVAL 2
+
+#if DISABLED(SPACE_SAVER)
+  #define BUSY_WHILE_HEATING
+#endif
+
+#define EEPROM_SETTINGS
+
+#if ENABLED(SPACE_SAVER)
+  //#define DISABLE_M503
+#endif
+
+#define EEPROM_CHITCHAT
+#define EEPROM_BOOT_SILENT
+
+#if DISABLED(SPACE_SAVER) && DISABLED(SPACE_SAVER_2560)
+  #define EEPROM_AUTO_INIT
+#endif
 
 #define MIN_SOFTWARE_ENDSTOPS
 #if ENABLED(MIN_SOFTWARE_ENDSTOPS)
   #define MIN_SOFTWARE_ENDSTOP_X
   #define MIN_SOFTWARE_ENDSTOP_Y
-  #if DISABLED(EZABL_ENABLE)
+  #if DISABLED(ABL_ENABLE)
     #define MIN_SOFTWARE_ENDSTOP_Z
   #endif
 #endif
@@ -590,44 +508,6 @@
   #define MAX_SOFTWARE_ENDSTOP_Y
   #define MAX_SOFTWARE_ENDSTOP_Z
 #endif
-
-#if ENABLED(EZOUTV2_ENABLE) || ENABLED(CR10S_STOCKFILAMENTSENSOR)
-  #define FILAMENT_RUNOUT_SENSOR
-  #if ENABLED(FILAMENT_RUNOUT_SENSOR)
-    #if ENABLED(EZOUTV2_ENABLE)
-      #define FIL_RUNOUT_INVERTING false
-    #else
-      #define FIL_RUNOUT_INVERTING true
-    #endif
-    #define NUM_RUNOUT_SENSORS   1
-    #define FIL_RUNOUT_PULLUP
-    #define FILAMENT_RUNOUT_SCRIPT "M600"
-  #endif
-#endif
-
-#if ENABLED(MANUAL_MESH_LEVELING) && DISABLED(EZABL_ENABLE)
-  #define PROBE_MANUALLY
-  #define LCD_BED_LEVELING
-  #define MESH_BED_LEVELING
-  #define MESH_EDIT_Z_STEP 0.025
-  #define LCD_PROBE_Z_RANGE 4
-  #define MESH_INSET 10
-  #define GRID_MAX_POINTS_X 5
-  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
-#endif
-
-#if ENABLED(MESH_BED_LEVELING) || ENABLED(AUTO_BED_LEVELING_BILINEAR) || ENABLED(AUTO_BED_LEVELING_UBL)
-  //#define ENABLE_LEVELING_FADE_HEIGHT
-  #define SEGMENT_LEVELED_MOVES
-  #define LEVELED_SEGMENT_LENGTH 5.0
-#endif
-
-#define EEPROM_SETTINGS
-#define EEPROM_CHITCHAT
-#define EEPROM_AUTO_INIT
-
-#define HOST_KEEPALIVE_FEATURE
-#define DEFAULT_KEEPALIVE_INTERVAL 2
 
 #define PREHEAT_1_LABEL       "PLA"
 #define PREHEAT_1_TEMP_HOTEND 200
@@ -640,36 +520,68 @@
 #define PREHEAT_2_FAN_SPEED     0
 
 #define NOZZLE_PARK_FEATURE
-
 #if ENABLED(NOZZLE_PARK_FEATURE)
   #define NOZZLE_PARK_POINT { 10, 10, 10 }
-  #define NOZZLE_PARK_XY_FEEDRATE 100
+  #define NOZZLE_PARK_XY_FEEDRATE 100  
   #define NOZZLE_PARK_Z_FEEDRATE 5
 #endif
 
-#define PRINTJOB_TIMER_AUTOSTART
+#define DISABLE_X false
+#define DISABLE_Y false
+#define DISABLE_Z false
+#define DISABLE_E false
+#define DISABLE_INACTIVE_EXTRUDER
 
-#define DISPLAY_CHARSET_HD44780 WESTERN
+#define ENDSTOP_NOISE_THRESHOLD 2
 
+#define SERVO_DELAY { 300 }
+
+/**
+ * LCD General Settings
+ */
+
+#define LCD_LANGUAGE en
+#define DISPLAY_CHARSET_HD44780 JAPANESE
 #define LCD_INFO_SCREEN_STYLE 0
-
-#define SDSUPPORT
-
 #define DISABLE_REDUCED_ACCURACY_WARNING
-
-#define INDIVIDUAL_AXIS_HOMING_MENU
-
-#define LEVEL_BED_CORNERS
-#if ENABLED(LEVEL_BED_CORNERS)
-  #define LEVEL_CORNERS_INSET 30
-  #define LEVEL_CORNERS_Z_HOP 5.0
+#if DISABLED(DWIN_CREALITY_LCD) && DISABLED(LCD2004) && DISABLED(TFT_COLOR_UI)
+  #define SHOW_BOOTSCREEN
+  #define SHOW_CUSTOM_BOOTSCREEN
 #endif
 
-#define SPEAKER
+#if ENABLED(TH3D_STATUS_SCREEN_LOGO)
+  #define CUSTOM_STATUS_SCREEN_IMAGE
+#endif
 
-#if ENABLED(FAN_FIX)
-  #define FAN_SOFT_PWM
-  #define SOFT_PWM_SCALE 1
-#else
-  #define SOFT_PWM_SCALE 0
+#if DISABLED(DWIN_CREALITY_LCD) && DISABLED(SPACE_SAVER)
+  #define INDIVIDUAL_AXIS_HOMING_MENU
+#endif
+
+//#if DISABLED(SPACE_SAVER) //testing if space is available on all configs 10082020 TDH
+  #define LEVEL_BED_CORNERS
+  #if ENABLED(LEVEL_BED_CORNERS)
+    #define LEVEL_CORNERS_INSET_LFRB { 30, 30, 30, 30 }
+    #define LEVEL_CORNERS_HEIGHT      0.0
+    #define LEVEL_CORNERS_Z_HOP       5.0
+    #define LEVEL_CENTER_TOO
+  #endif
+//#endif
+
+#if ENABLED(MANUAL_MESH_LEVELING) && DISABLED(ABL_ENABLE)
+  #define LCD_BED_LEVELING
+  #define MESH_BED_LEVELING
+  #define RESTORE_LEVELING_AFTER_G28
+  #define MESH_EDIT_Z_STEP  0.025
+  #define LCD_PROBE_Z_RANGE 4
+  #define MESH_INSET EZABL_PROBE_EDGE
+  
+  #define SEGMENT_LEVELED_MOVES
+  #define LEVELED_SEGMENT_LENGTH 5.0
+
+  #define GRID_MAX_POINTS_X 3
+  #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
+  
+  #if DISABLED(SPACE_SAVER)
+    #define MESH_EDIT_MENU
+  #endif
 #endif
